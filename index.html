@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EVE Online: калькулятор планетарной промышленности</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#eef2f5;--panel:#fff;--ink:#16222c;--mute:#5d6e7b;--line:#d3dde4;--accent:#0b7a75;--hot:#b4540a;--chip:#e3eef0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1a22;--panel:#16252f;--ink:#e4edf2;--mute:#8da0ad;--line:#27394590;--accent:#4fd1c5;--hot:#f0a35c;--chip:#1d3340}}
+:root[data-theme="dark"]{--bg:#0f1a22;--panel:#16252f;--ink:#e4edf2;--mute:#8da0ad;--line:#27394590;--accent:#4fd1c5;--hot:#f0a35c;--chip:#1d3340}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "Segoe UI",system-ui,-apple-system,Roboto,sans-serif}
+main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
+h1{font-size:1.5rem;line-height:1.2;margin:0 0 4px}
+.sub{color:var(--mute);margin:0 0 20px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.line{display:grid;grid-template-columns:80px 1fr 110px 42px;gap:8px;margin-bottom:8px}
+@media(max-width:560px){.line{grid-template-columns:80px 1fr 42px}.line .ln{grid-column:1/-1;order:4}}
+label{display:block;font-size:.9rem;color:var(--mute);margin-bottom:4px}
+select,input[type=number]{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:10px}
+select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.chk{display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--ink);font-size:.95rem;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.raw h2{margin:0 0 4px;font-size:1.05rem}
+#tot h2{margin:0 0 4px;font-size:1.05rem}
+#tot .note{margin:6px 0 0}
+.big{font-size:2.2rem;font-weight:700;color:var(--hot);line-height:1.1}
+.tier h2{margin:0 0 8px;font-size:1.05rem}
+.tier .n{color:var(--mute);font-weight:400;font-size:.9rem}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:7px 8px;border-bottom:1px solid var(--line)}
+th{font-weight:600;font-size:.88rem;color:var(--mute)}
+td.q,th.q{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+td.q b{color:var(--accent)}
+tr:last-child td{border-bottom:0}
+.btn{font:inherit;color:var(--accent);background:none;border:1px dashed var(--accent);border-radius:6px;padding:8px 12px;cursor:pointer}
+.rm{font:inherit;font-size:1.2rem;color:var(--mute);background:none;border:1px solid var(--line);border-radius:6px;cursor:pointer}
+.rm:disabled{opacity:.4;cursor:default}
+.btn:focus-visible,.rm:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.tier h2{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.all{margin:0 0 0 auto;display:flex;align-items:center;gap:6px;font-size:.88rem;font-weight:400;color:var(--mute)}
+.all input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent)}
+input:disabled{opacity:.6}
+.chip{display:inline-block;margin:1px 2px 1px 0;padding:0 8px;font-size:.82rem;line-height:1.6;border:1px solid var(--c);border-radius:999px;background:color-mix(in srgb,var(--c) 18%,transparent)}
+.help{cursor:help}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark}
+.topbar{display:flex;flex-wrap:wrap;align-items:flex-start;justify-content:space-between;gap:10px 16px;margin-bottom:4px}
+.seg{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.vb{font:inherit;font-size:.85rem;padding:6px 12px;background:none;color:var(--mute);border:0;cursor:pointer;white-space:nowrap}
+.vb.on{background:var(--accent);color:var(--bg)}
+.vb:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.cbar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.tg{display:flex;align-items:center;gap:8px;font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer;text-align:left}
+.tg:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.chev{display:inline-block;color:var(--mute);transition:transform .15s}
+.collapsed .chev{transform:rotate(-90deg)}
+.collapsed .body{display:none}
+.collapsed h2{margin-bottom:0!important}
+.hq{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;margin-left:2px;border-radius:50%;background:var(--accent);color:var(--bg);font-size:.7rem;font-weight:700}
+.no{color:var(--mute);font-size:.88rem}
+input.allf,input.fac{width:68px;padding:5px 6px;text-align:right}
+.note{color:var(--mute);font-size:.88rem}
+</style>
+<script>try{var t=localStorage.getItem("pi-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+</head>
+<body>
+<main>
+<div class="topbar"><h1>Калькулятор планетарной промышленности</h1>
+<div class="seg" role="group" aria-label="Тема оформления"><button type="button" class="vb th" data-t="light" aria-pressed="false">☀ Светлая</button><button type="button" class="vb th" data-t="dark" aria-pressed="false">🌙 Тёмная</button></div></div>
+<p class="sub">EVE Online: добавьте один или несколько товаров (P1–P4) и количество, чтобы узнать, сколько нужно материалов на каждом уровне.</p>
+
+<section class="panel">
+<div id="lines"></div>
+<button type="button" id="add" class="btn">+ Добавить товар</button>
+<label class="chk"><input type="checkbox" id="rnd" checked> Округлять до целых производственных циклов</label>
+</section>
+
+<div class="cbar" id="cbar"><button type="button" class="btn" id="colAll">Свернуть всё</button><button type="button" class="btn" id="expAll">Развернуть всё</button><button type="button" class="btn" id="copyBtn">Скопировать список</button><span class="note" id="copyMsg"></span></div>
+<section class="panel raw" id="raw"></section>
+<section class="panel" id="tot"></section>
+<div id="tiers"></div>
+
+<p class="note">В колонке «Заводов» укажите, сколько фабрик делают этот материал одновременно, и время пересчитается. Цикл P1 занимает 30 минут, P2, P3 и P4 по 1 часу. При включённом округлении циклы делятся между заводами целыми числами.</p>
+<p class="note">Рецепты взяты с EVE University Wiki (страница Planetary Commodities, редакция августа 2025). Если Fenris Creations изменит рецепты, поправьте списки в начале скрипта. Один цикл: 3000 P0 → 20 P1; по 40 + 40 P1 → 5 P2; по 10 + 10 (+ 10) P2 → 3 P3; по 6 + 6 + 6 P3 (или 6 + 6 P3 и 40 P1) → 1 P4.</p>
+</main>
+
+<script>
+// Тема: ручной выбор (запоминается в браузере)
+var TH=null;
+try{TH=localStorage.getItem("pi-theme")}catch(e){}
+if(TH!=="light"&&TH!=="dark")TH=(window.matchMedia&&matchMedia("(prefers-color-scheme: dark)").matches)?"dark":"light";
+function setTheme(t,save){
+  TH=t; document.documentElement.setAttribute("data-theme",t);
+  document.querySelectorAll(".th").forEach(function(b){var on=b.dataset.t===t;b.classList.toggle("on",on);b.setAttribute("aria-pressed",on)});
+  if(save){try{localStorage.setItem("pi-theme",t)}catch(e){}}
+}
+document.querySelectorAll(".th").forEach(function(b){b.addEventListener("click",function(){setTheme(b.dataset.t,true)})});
+setTheme(TH,false);
+
+// P1 : сырьё P0
+var P1={"Bacteria":"Micro-Organisms","Biofuels":"Carbon Compounds","Biomass":"Planktic Colonies","Chiral Structures":"Non-CS Crystals","Electrolytes":"Ionic Solutions","Industrial Fibers":"Autotrophs","Oxidizing Compound":"Reactive Gas","Oxygen":"Noble Gas","Plasmoids":"Suspended Plasma","Precious Metals":"Noble Metals","Proteins":"Complex Organisms","Reactive Metals":"Base Metals","Silicon":"Felsic Magma","Toxic Metals":"Heavy Metals","Water":"Aqueous Liquids"};
+// P2 : два P1 (по 40 на цикл, результат 5)
+var P2={"Biocells":["Precious Metals","Biofuels"],"Construction Blocks":["Toxic Metals","Reactive Metals"],"Consumer Electronics":["Chiral Structures","Toxic Metals"],"Coolant":["Water","Electrolytes"],"Enriched Uranium":["Toxic Metals","Precious Metals"],"Fertilizer":["Proteins","Bacteria"],"Genetically Enhanced Livestock":["Biomass","Proteins"],"Livestock":["Biofuels","Proteins"],"Mechanical Parts":["Precious Metals","Reactive Metals"],"Microfiber Shielding":["Silicon","Industrial Fibers"],"Miniature Electronics":["Silicon","Chiral Structures"],"Nanites":["Reactive Metals","Bacteria"],"Oxides":["Oxygen","Oxidizing Compound"],"Polyaramids":["Industrial Fibers","Oxidizing Compound"],"Polytextiles":["Industrial Fibers","Biofuels"],"Rocket Fuel":["Electrolytes","Plasmoids"],"Silicate Glass":["Silicon","Oxidizing Compound"],"Superconductors":["Water","Plasmoids"],"Supertensile Plastics":["Biomass","Oxygen"],"Synthetic Oil":["Oxygen","Electrolytes"],"Test Cultures":["Water","Bacteria"],"Transmitter":["Chiral Structures","Plasmoids"],"Viral Agent":["Biomass","Bacteria"],"Water-Cooled CPU":["Water","Reactive Metals"]};
+// P3 : два или три P2 (по 10 на цикл, результат 3)
+var P3={"Biotech Research Reports":["Nanites","Livestock","Construction Blocks"],"Camera Drones":["Silicate Glass","Rocket Fuel"],"Condensates":["Oxides","Coolant"],"Cryoprotectant Solution":["Test Cultures","Synthetic Oil","Fertilizer"],"Data Chips":["Supertensile Plastics","Microfiber Shielding"],"Gel-Matrix Biopaste":["Oxides","Biocells","Superconductors"],"Guidance Systems":["Water-Cooled CPU","Transmitter"],"Hazmat Detection Systems":["Polytextiles","Viral Agent","Transmitter"],"Hermetic Membranes":["Polyaramids","Genetically Enhanced Livestock"],"High-Tech Transmitters":["Polyaramids","Transmitter"],"Industrial Explosives":["Fertilizer","Polytextiles"],"Neocoms":["Biocells","Silicate Glass"],"Nuclear Reactors":["Microfiber Shielding","Enriched Uranium"],"Planetary Vehicles":["Supertensile Plastics","Mechanical Parts","Miniature Electronics"],"Robotics":["Mechanical Parts","Consumer Electronics"],"Smartfab Units":["Construction Blocks","Miniature Electronics"],"Supercomputers":["Water-Cooled CPU","Coolant","Consumer Electronics"],"Synthetic Synapses":["Supertensile Plastics","Test Cultures"],"Transcranial Microcontrollers":["Biocells","Nanites"],"Ukomi Superconductors":["Synthetic Oil","Superconductors"],"Vaccines":["Livestock","Viral Agent"]};
+// P4 : [тип, название, количество на 1 штуку]; тип 3 = P3, тип 1 = P1
+var P4={
+"Broadcast Node":[[3,"Neocoms",6],[3,"Data Chips",6],[3,"High-Tech Transmitters",6]],
+"Integrity Response Drones":[[3,"Gel-Matrix Biopaste",6],[3,"Hazmat Detection Systems",6],[3,"Planetary Vehicles",6]],
+"Nano-Factory":[[3,"Industrial Explosives",6],[3,"Ukomi Superconductors",6],[1,"Reactive Metals",40]],
+"Organic Mortar Applicators":[[3,"Condensates",6],[3,"Robotics",6],[1,"Bacteria",40]],
+"Recursive Computing Module":[[3,"Synthetic Synapses",6],[3,"Guidance Systems",6],[3,"Transcranial Microcontrollers",6]],
+"Self-Harmonizing Power Core":[[3,"Camera Drones",6],[3,"Nuclear Reactors",6],[3,"Hermetic Membranes",6]],
+"Sterile Conduits":[[3,"Smartfab Units",6],[3,"Vaccines",6],[1,"Water",40]],
+"Wetware Mainframe":[[3,"Supercomputers",6],[3,"Biotech Research Reports",6],[3,"Cryoprotectant Solution",6]]
+};
+
+// Где добывается сырьё P0
+var PL={"Barren":["Aqueous Liquids","Base Metals","Carbon Compounds","Micro-Organisms","Noble Metals"],
+"Gas":["Aqueous Liquids","Base Metals","Ionic Solutions","Noble Gas","Reactive Gas"],
+"Ice":["Aqueous Liquids","Heavy Metals","Micro-Organisms","Noble Gas","Planktic Colonies"],
+"Lava":["Base Metals","Felsic Magma","Heavy Metals","Non-CS Crystals","Suspended Plasma"],
+"Oceanic":["Aqueous Liquids","Carbon Compounds","Complex Organisms","Micro-Organisms","Planktic Colonies"],
+"Plasma":["Base Metals","Heavy Metals","Noble Metals","Non-CS Crystals","Suspended Plasma"],
+"Storm":["Aqueous Liquids","Base Metals","Ionic Solutions","Noble Gas","Suspended Plasma"],
+"Temperate":["Aqueous Liquids","Autotrophs","Carbon Compounds","Complex Organisms","Micro-Organisms"]};
+var PC={"Barren":"#a67c52","Gas":"#c9a227","Ice":"#4aa3d8","Lava":"#d9534f","Oceanic":"#2f6fd0","Plasma":"#9b59d0","Storm":"#5c6bc0","Temperate":"#3fa66a"};
+var PN=Object.keys(PL),PM={};
+PN.forEach(function(p){PL[p].forEach(function(r){(PM[r]=PM[r]||[]).push(p)})});
+
+var $=function(id){return document.getElementById(id)};
+function names(t){return (t==4?Object.keys(P4):t==3?Object.keys(P3):t==2?Object.keys(P2):Object.keys(P1)).sort()}
+var L=[{t:4,n:"",q:0}];
+function drawLines(){
+  $("lines").innerHTML=L.map(function(l,i){
+    var to=[4,3,2,1].map(function(t){return '<option value="'+t+'"'+(t==l.t?' selected':'')+'>P'+t+'</option>'}).join("");
+    var no='<option value=""'+(l.n===""?' selected':'')+'>Выберите товар</option>'+names(l.t).map(function(k){return '<option'+(k===l.n?' selected':'')+'>'+k+'</option>'}).join("");
+    return '<div class="line" data-i="'+i+'"><select class="lt" aria-label="Уровень">'+to+'</select><select class="ln" aria-label="Товар">'+no+'</select><input class="lq" type="number" min="0" step="1" inputmode="numeric" value="'+l.q+'" aria-label="Количество"><button type="button" class="rm" aria-label="Убрать товар"'+(L.length<2?' disabled':'')+'>×</button></div>';
+  }).join("");
+}
+
+function add(m,k,v){m[k]=(m[k]||0)+v}
+function fmt(n){return (Math.round(n*10)/10).toLocaleString("ru-RU")}
+
+// Один уровень вниз: need = {товар: сколько нужно}
+function step(need,out,inp,recipe,round,cm){
+  var next={},rows=[];
+  Object.keys(need).sort().forEach(function(k){
+    var c=need[k]/out; if(round)c=Math.ceil(c-1e-9);
+    rows.push({n:k,q:need[k],c:c,t:c*cm});
+    recipe(k).forEach(function(i){add(next,i,c*inp)});
+  });
+  return {next:next,rows:rows};
+}
+
+function fmtTime(m){
+  m=Math.round(m); if(m<60)return m+" мин";
+  var h=Math.floor(m/60),mm=m%60,d=Math.floor(h/24); h=h%24;
+  return ((d?d+" д ":"")+(h?h+" ч":"")+(mm?" "+mm+" мин":"")).trim()||"0";
+}
+// Можно ли сделать товар целиком на одной планете (все нужные P0 есть на ней)
+var SP={};
+function p0set(name,tk){
+  var o={};function a(x){o[P1[x]]=1}
+  if(tk==2)P2[name].forEach(a);else P3[name].forEach(function(x){P2[x].forEach(a)});
+  return Object.keys(o);
+}
+function single(name,tk){
+  var k=tk+name;
+  if(!SP[k]){var need=p0set(name,tk);SP[k]=PN.filter(function(p){return need.every(function(x){return PL[p].indexOf(x)>=0})})}
+  return SP[k];
+}
+function pcell(name,tk){
+  var pl=single(name,tk);
+  return pl.length?pl.map(function(p){return '<span class="chip" style="--c:'+PC[p]+'">'+p+'</span>'}).join(" "):'<span class="no">нужно несколько планет</span>';
+}
+var F={},FA={},FC={};
+function tmin(c,cm,n,round){return (round?Math.ceil(c/n-1e-9):c/n)*cm}
+function hlabel(){return 'Одна планета <span class="hq">?</span>'}
+function table(rows,tk){
+  var time=!!tk,cm=tk==1?30:60,round=$("rnd").checked,sp=tk==2||tk==3;
+  var h='<div class="scroll"><table><thead><tr><th>Материал</th><th class="q">Нужно</th><th class="q">Циклов</th>'+(time?'<th class="q">Заводов</th><th class="q">Время</th>':'')+(sp?'<th class="help" title="Этот ресурс можно добывать и производить на одной и той же планете. Здесь показаны типы планет, где это возможно.">'+hlabel()+'</th>':'')+'</tr></thead><tbody>';
+  rows.forEach(function(r){
+    var key=tk+":"+r.n,n=FC[tk]?(FA[tk]||1):(F[key]||FA[tk]||1);
+    h+='<tr><td>'+r.n+'</td><td class="q"><b>'+fmt(r.q)+'</b></td><td class="q">'+(r.c==null?"":fmt(r.c))+'</td>'+
+    (time?'<td class="q"><input class="fac" type="number" min="1" step="1" inputmode="numeric" value="'+n+'"'+(FC[tk]?' disabled':'')+' data-key="'+key+'" data-c="'+r.c+'" data-cm="'+cm+'" aria-label="Количество заводов: '+r.n+'"></td><td class="q tm" data-min="'+tmin(r.c,cm,n,round)+'">'+fmtTime(tmin(r.c,cm,n,round))+'</td>':'')+(sp?'<td title="'+(single(r.n,tk).length?'Этот ресурс можно добывать и производить на одной и той же планете этого типа':'Нужное сырьё есть только на разных планетах, одной планеты для этого ресурса недостаточно')+'">'+pcell(r.n,tk)+'</td>':'')+'</tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function rawTable(rows){
+  var h='<div class="scroll"><table><thead><tr><th>Материал</th><th class="q">Нужно</th><th>Где добывать</th></tr></thead><tbody>';
+  rows.forEach(function(r){
+    var chips=(PM[r.n]||[]).map(function(p){return '<span class="chip" style="--c:'+PC[p]+'">'+p+'</span>'}).join(" ");
+    h+='<tr><td>'+r.n+'</td><td class="q"><b>'+fmt(r.q)+'</b></td><td>'+chips+'</td></tr>';
+  });
+  return h+'</tbody></table></div>';
+}
+function tier(t,rows,tk){
+  if(!rows.length)return "";
+  return '<section class="panel tier'+(COL["t"+tk]?' collapsed':'')+'" data-tk="'+tk+'"><h2>'+tg("t"+tk,t+' <span class="n">'+rows.length+' видов</span>')+
+  '<label class="all"><input type="checkbox" class="allc" data-tk="'+tk+'"'+(FC[tk]?' checked':'')+'> Одно число для всех <input class="allf" type="number" min="1" step="1" inputmode="numeric" value="'+(FA[tk]||1)+'" data-tk="'+tk+'"'+(FC[tk]?'':' disabled')+' aria-label="Заводов на все"></label></h2><div class="body">'+table(rows,tk)+'</div></section>';
+}
+
+
+var COL={raw:true,tot:true,t1:true,t2:true,t3:true,t4:true};
+function tg(k,html){return '<button type="button" class="tg" data-k="'+k+'" aria-expanded="'+(COL[k]?"false":"true")+'"><span class="chev">▾</span><span>'+html+'</span></button>'}
+function facN(tk,name){return FC[tk]?(FA[tk]||1):(F[tk+":"+name]||FA[tk]||1)}
+
+// Расчёт потоков по уровням (round: округлять циклы до целых)
+function flow(round){
+  var d4={},d3={},d2={},d1={};
+  L.filter(function(l){return l.n}).forEach(function(l){add([0,d1,d2,d3,d4][l.t],l.n,Math.max(0,l.q||0))});
+  var p4=Object.keys(d4).sort().map(function(k){
+    var c=round?Math.ceil(d4[k]-1e-9):d4[k];
+    P4[k].forEach(function(i){add(i[0]===3?d3:d1,i[1],i[2]*c)});
+    return {n:k,q:d4[k],c:c,t:c*60};
+  });
+  var s3=step(d3,3,10,function(k){return P3[k]},round,60);
+  Object.keys(s3.next).forEach(function(k){add(d2,k,s3.next[k])});
+  var s2=step(d2,5,40,function(k){return P2[k]},round,60);
+  Object.keys(s2.next).forEach(function(k){add(d1,k,s2.next[k])});
+  var s1=step(d1,20,3000,function(k){return [P1[k]]},round,30);
+  return {p4:p4,s3:s3.rows,s2:s2.rows,s1:s1.rows,d0:s1.next};
+}
+
+// Точная модель: каждый завод запускает цикл, когда хватает материалов (шаг 30 минут, P0 всегда в наличии)
+function sim(){
+  var f=flow(true),nodes=[];
+  function mk(tk,rows,cm,out,ins){rows.forEach(function(r){nodes.push({tk:tk,name:r.n,cm:cm,out:out,ins:ins(r.n),todo:Math.ceil(r.c-1e-9),busy:0,n:facN(tk,r.n)})})}
+  mk(4,f.p4,60,1,function(k){return P4[k].map(function(i){return [i[1],i[2]]})});
+  mk(3,f.s3,60,3,function(k){return P3[k].map(function(x){return [x,10]})});
+  mk(2,f.s2,60,5,function(k){return P2[k].map(function(x){return [x,40]})});
+  mk(1,f.s1,30,20,function(){return []});
+  var stock={},run=[],t=0;
+  for(var g=0;g<100000;g++){
+    run=run.filter(function(r){
+      if(r.end<=t){stock[r.nd.name]=(stock[r.nd.name]||0)+r.nd.out;r.nd.busy--;return false}
+      return true;
+    });
+    var left=0,started=false;
+    nodes.forEach(function(nd){
+      while(nd.todo>0&&nd.busy<nd.n&&nd.ins.every(function(i){return (stock[i[0]]||0)>=i[1]})){
+        nd.ins.forEach(function(i){stock[i[0]]-=i[1]});
+        nd.todo--;nd.busy++;started=true;run.push({nd:nd,end:t+nd.cm});
+      }
+      left+=nd.todo;
+    });
+    if(!left&&!run.length)return t;
+    if(!run.length&&!started)return null;
+    t+=30;
+  }
+  return null;
+}
+
+function summary(){
+  var parts=[],total=0;
+  [1,2,3,4].forEach(function(tk){
+    var sec=document.querySelector('#tiers section[data-tk="'+tk+'"]'); if(!sec)return;
+    var m=0; sec.querySelectorAll(".tm").forEach(function(c){m=Math.max(m,+c.dataset.min||0)});
+    total+=m; parts.push("P"+tk+": "+fmtTime(m));
+  });
+  var ex=sim();
+  $("tot").classList.toggle("collapsed",!!COL.tot);
+  $("tot").innerHTML='<h2>'+tg("tot","Общее время производства")+'</h2><div class="body"><div class="big">'+(ex==null?"—":fmtTime(ex))+'</div>'+
+    '<p class="note">'+(ex==null?'Срок слишком большой для расчёта: добавьте заводов. ':'')+'Модель с перекрытием этапов: каждый завод начинает следующий цикл, как только набралось достаточно материалов. Считаются целые циклы, сырьё P0 всегда доступно.</p>'+
+    '<p class="note">Для сравнения, если ждать каждый этап целиком: <b>'+fmtTime(total)+'</b> ('+parts.join(" → ")+').</p></div>';
+}
+
+function calc(){
+  var round=$("rnd").checked;
+  if(!L.some(function(l){return l.n})){$("raw").style.display=$("tot").style.display=$("cbar").style.display="none";$("tiers").innerHTML="";return}
+  $("raw").style.display=$("tot").style.display=$("cbar").style.display="";
+  var f=flow(round),total=0;
+  var r0=Object.keys(f.d0).sort().map(function(k){total+=f.d0[k];return {n:k,q:f.d0[k],c:null}});
+  $("raw").classList.toggle("collapsed",!!COL.raw);
+  $("raw").innerHTML='<h2>'+tg("raw","Всего сырья P0")+'</h2><div class="body"><div class="big">'+fmt(total)+'</div>'+rawTable(r0)+'</div>';
+  var blocks=tier("P4 (передовые товары)",f.p4,4)+
+    tier("P3 (специализированные товары)",f.s3,3)+
+    tier("P2 (очищенные товары)",f.s2,2)+
+    tier("P1 (обработанные материалы)",f.s1,1);
+  $("tiers").innerHTML=blocks;
+  summary();
+}
+
+function toggle(e){
+  var b=e.target.closest(".tg"); if(!b)return;
+  var k=b.dataset.k; COL[k]=!COL[k];
+  b.closest("section").classList.toggle("collapsed",COL[k]);
+  b.setAttribute("aria-expanded",COL[k]?"false":"true");
+}
+["raw","tot","tiers"].forEach(function(id){$(id).addEventListener("click",toggle)});
+$("colAll").addEventListener("click",function(){["raw","tot","t1","t2","t3","t4"].forEach(function(k){COL[k]=true});calc()});
+$("expAll").addEventListener("click",function(){Object.keys(COL).forEach(function(k){delete COL[k]});calc()});
+// Копирование готового списка
+function listText(){
+  var round=$("rnd").checked,f=flow(round),out=[],agg={},tot=0;
+  L.filter(function(l){return l.n}).forEach(function(l){agg[l.n]=(agg[l.n]||0)+Math.max(0,l.q||0)});
+  out.push("Планетарная промышленность EVE Online");
+  out.push("Товары: "+Object.keys(agg).map(function(k){return k+" ×"+fmt(agg[k])}).join(", "));
+  [["P4",f.p4],["P3",f.s3],["P2",f.s2],["P1",f.s1]].forEach(function(g){
+    if(!g[1].length)return;
+    out.push("","Уровень "+g[0]+":");
+    g[1].forEach(function(r){out.push("  "+r.n+" — "+fmt(r.q)+" (циклов: "+fmt(r.c)+")")});
+  });
+  out.push("","Сырьё P0:");
+  Object.keys(f.d0).sort().forEach(function(k){
+    tot+=f.d0[k];
+    out.push("  "+k+" — "+fmt(f.d0[k])+((PM[k]||[]).length?" ("+PM[k].join(", ")+")":""));
+  });
+  out.push("Всего P0: "+fmt(tot));
+  var ex=sim();
+  out.push("Общее время производства: "+(ex==null?"слишком долго для расчёта":fmtTime(ex)));
+  return out.join("\n").replace(/[\u00a0\u202f]/g," ");
+}
+$("copyBtn").addEventListener("click",function(){
+  var t=listText();
+  function done(ok){
+    $("copyMsg").textContent=ok?"Скопировано":"Не удалось скопировать, выделите список вручную";
+    setTimeout(function(){$("copyMsg").textContent=""},2500);
+  }
+  function fallback(){
+    var ta=document.createElement("textarea"),ok=false;
+    ta.value=t;ta.style.position="fixed";ta.style.opacity="0";
+    document.body.appendChild(ta);ta.select();
+    try{ok=document.execCommand("copy")}catch(e){}
+    document.body.removeChild(ta);done(ok);
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){done(true)},fallback);
+  else fallback();
+});
+var LN=$("lines");
+function idx(e){return +e.target.closest(".line").dataset.i}
+LN.addEventListener("change",function(e){
+  var c=e.target.classList,i=idx(e);
+  if(c.contains("lt")){L[i].t=+e.target.value;L[i].n="";drawLines();calc()}
+  else if(c.contains("ln")){L[i].n=e.target.value;calc()}
+});
+LN.addEventListener("input",function(e){if(e.target.classList.contains("lq")){L[idx(e)].q=parseFloat(e.target.value)||0;calc()}});
+LN.addEventListener("click",function(e){if(e.target.classList.contains("rm")&&L.length>1){L.splice(idx(e),1);drawLines();calc()}});
+$("add").addEventListener("click",function(){L.push({t:4,n:"",q:0});drawLines();calc()});
+$("rnd").addEventListener("change",calc);
+function upd(inp,n){var c=inp.closest("tr").querySelector(".tm"),m=tmin(+inp.dataset.c,+inp.dataset.cm,n,$("rnd").checked);c.dataset.min=m;c.textContent=fmtTime(m)}
+$("tiers").addEventListener("input",function(e){
+  var t=e.target,n=Math.max(1,Math.floor(+t.value)||1);
+  if(t.classList.contains("fac")){F[t.dataset.key]=n;upd(t,n);summary()}
+  else if(t.classList.contains("allf")){
+    FA[t.dataset.tk]=n;
+    t.closest("section").querySelectorAll("input.fac").forEach(function(i){i.value=n;upd(i,n)});
+    summary();
+  }
+});
+$("tiers").addEventListener("change",function(e){
+  var t=e.target; if(!t.classList.contains("allc"))return;
+  var tk=t.dataset.tk,on=t.checked,sec=t.closest("section"); FC[tk]=on;
+  sec.querySelector(".allf").disabled=!on;
+  sec.querySelectorAll("input.fac").forEach(function(i){
+    var n=on?(FA[tk]||1):(F[i.dataset.key]||FA[tk]||1);
+    i.disabled=on;i.value=n;upd(i,n);
+  });
+  summary();
+});
+drawLines();calc();
+</script>
+</body>
+</html>

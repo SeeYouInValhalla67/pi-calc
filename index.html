@@ -555,7 +555,8 @@ function ddOpen(btn){
   DD={i:i,btn:btn,el:el,inp:el.querySelector(".dds"),ul:el.querySelector(".ddl"),act:names(L[i].t).indexOf(L[i].n),items:[]};
   ddRender();DD.inp.focus();
 }
-function ddPick(n){var i=DD.i;ddClose(false);L[i].n=n;drawLines();calc();var b=document.querySelectorAll(".ddb")[i];if(b)b.focus()}
+function ddPick(n){var i=DD.i;ddClose(false);L[i].n=n;if(!(L[i].q>0))L[i].q=1; // при выборе товара количество по умолчанию 1
+  drawLines();calc();var b=document.querySelectorAll(".ddb")[i];if(b)b.focus()}
 LN.addEventListener("click",function(e){
   var b=e.target.closest(".ddb");if(b){ddOpen(b);return}
   var li=e.target.closest(".ddl li[data-n]");if(li&&DD)ddPick(li.dataset.n);

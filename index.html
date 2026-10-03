@@ -27,7 +27,7 @@ select:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline
 .chk{display:flex;gap:8px;align-items:center;margin-top:12px;color:var(--ink);font-size:.95rem;cursor:pointer}
 .chk input{width:18px;height:18px;accent-color:var(--accent)}
 .raw h2{margin:0 0 4px;font-size:1.05rem}
-#tot h2{margin:0 0 4px;font-size:1.05rem}
+#isk h2,#tot h2{margin:0 0 4px;font-size:1.05rem}
 #tot .note{margin:6px 0 0}
 .big{font-size:2.2rem;font-weight:700;color:var(--total);line-height:1.1}
 .tier h2{margin:0 0 8px;font-size:1.05rem}
@@ -88,12 +88,13 @@ input.allf::-webkit-inner-spin-button,input.allf::-webkit-outer-spin-button,inpu
 .sb svg{width:14px;height:14px}
 .stp:has(input:disabled) .sb{opacity:.35;pointer-events:none}
 .stp input:disabled{opacity:.6}
-table.tt{table-layout:fixed;min-width:1040px}
-table.tt col.c-mat{width:270px}
+table.tt{table-layout:fixed;min-width:900px}
+table.tt col.c-pl{width:190px}table.tt col.c-r3{width:616px}
 table.tt td{overflow:hidden;text-overflow:ellipsis}
 table.tt col.c-need{width:136px}table.tt col.c-cyc{width:150px}table.tt col.c-fac{width:126px}table.tt col.c-time{width:150px}
 .mn{display:flex;align-items:center;white-space:nowrap}
-td:has(.chip),td .no{white-space:nowrap}.mn img.ico{flex:none}
+#raw td:has(.chip),td .no{white-space:nowrap}
+#tiers td:has(.chip){white-space:normal;line-height:1.9}.mn img.ico{flex:none}
 td.fcell,th.fcell{text-align:center}
 .tm{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .note{color:var(--mute);font-size:.88rem}
@@ -127,6 +128,76 @@ td.cyc{line-height:1.25}
 .btn.tog>span{grid-area:1/1;text-align:center}
 .btn.tog .t-col,.btn.tog.open .t-exp{visibility:hidden}
 .btn.tog.open .t-col{visibility:visible}
+.pbar2{display:flex;flex-wrap:wrap;align-items:center;gap:10px 22px;margin-bottom:12px}
+.vsw{display:flex;align-items:center;gap:8px;padding:4px 10px;border:1px dashed var(--hot);border-radius:8px}
+.vl{font-size:.82rem;color:var(--hot)}
+.vsb button{font:inherit;font-weight:700;width:30px;height:26px;padding:0;border:0;border-radius:6px;background:none;color:var(--mute);cursor:pointer}
+.vsb button.on{background:var(--panel);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.sel2{display:flex;align-items:center;gap:8px;margin:0;color:var(--ink);font-size:.95rem}
+.sel2.off{opacity:.45}
+.sel2 .selw select:disabled{cursor:not-allowed}
+.sel2 .selw select{padding:6px 28px 6px 10px;font-size:.9rem;width:auto}
+input.ptax{width:70px!important;padding:6px 8px!important}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px}
+.kpi{background:var(--bg);border-radius:8px;padding:12px 14px}
+.kpi .l{font-size:.82rem;color:var(--mute)}
+.kpi .v{font-size:1.45rem;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.3}
+.kpi .s{font-size:.78rem;color:var(--mute)}
+.pos{color:var(--total)}.neg{color:var(--del)}
+td.q b .pos,td.q b .neg{font-weight:700}
+table.tt col.c-isk{width:120px}
+#vCmp tr.top td{background:color-mix(in srgb,var(--total) 8%,transparent)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin:0 0 16px}
+.tab{font:inherit;font-weight:600;padding:10px 16px;background:none;border:0;border-bottom:3px solid transparent;margin-bottom:-1px;color:var(--mute);cursor:pointer}
+.tab.on{color:var(--ink);border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+table.tt col.c-lv{width:90px}table.tt col.c-mg{width:100px}table.tt col.c-add{width:130px}
+table.cmpt td{height:46px}
+.crow{cursor:pointer}
+.crow:hover td{background:color-mix(in srgb,var(--accent) 6%,transparent)}
+.tgt{display:inline-grid;place-items:center;width:22px;height:22px;margin:0 4px 0 -4px;padding:0;border:0;background:none;color:var(--mute);cursor:pointer;border-radius:4px;flex:none}
+.tgt:focus-visible{outline:2px solid var(--accent)}
+.crow .chev{transform:rotate(-90deg)}
+.crow.open .chev{transform:none}
+tr.trow td{height:auto!important;white-space:normal;padding:4px 8px 16px;background:var(--bg)}
+.tree{padding:6px 4px}
+.th2{font-size:.85rem;color:var(--mute);margin-bottom:8px}
+.tree ul{list-style:none;margin:0 0 0 18px;padding-left:22px;border-left:2px solid var(--lc,var(--line))}
+/* Цвета уровней в дереве */
+:root{--c4:#b58a00;--c3:#7b45d6;--c2:#0a7fc0;--c1:#1f8f50;--c0:#6b7b88}
+:root[data-theme="dark"],:root[data-theme="dusk"]{--c4:#e3b425;--c3:#a97bf2;--c2:#3fb0ea;--c1:#34c77b;--c0:#8a9aa6}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c4:#e3b425;--c3:#a97bf2;--c2:#3fb0ea;--c1:#34c77b;--c0:#8a9aa6}}
+.tree li.lv4{--lc:var(--c4)}.tree li.lv3{--lc:var(--c3)}.tree li.lv2{--lc:var(--c2)}.tree li.lv1{--lc:var(--c1)}.tree li.lv0{--lc:var(--c0)}
+.tree .tn{margin:4px 0;padding:4px 10px;border:1px solid color-mix(in srgb,var(--lc) 30%,var(--line));border-radius:8px;background:color-mix(in srgb,var(--lc) 5%,var(--panel))}
+.tree li.troot>.tn{border-color:color-mix(in srgb,var(--lc) 60%,transparent);background:color-mix(in srgb,var(--lc) 14%,var(--panel))}
+.tree .tn .tnt .chev{color:var(--lc)}
+.tn .tl{display:inline-block;min-width:26px;margin:0 8px 0 2px;padding:0 5px;border:1px solid color-mix(in srgb,var(--lc) 70%,transparent);border-radius:4px;background:color-mix(in srgb,var(--lc) 16%,transparent);color:var(--lc);font-size:.7rem;font-weight:700;text-align:center;line-height:1.6}
+.tree ul.tr0{padding-left:0;margin-left:0;border-left:0}
+.tree li{margin:0}
+.tn{display:grid;grid-template-columns:minmax(220px,1fr) 100px 170px 140px 130px;align-items:center;gap:8px;padding:4px 0;font-size:.92rem}
+.tn .tq{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
+.tn .tp{text-align:right;color:var(--mute);font-size:.85rem;font-variant-numeric:tabular-nums}
+.tn .ti{text-align:right;font-size:.85rem;font-variant-numeric:tabular-nums}
+.tn img.ico{width:20px;height:20px}
+.tn.hasch{cursor:pointer}
+.tn.hasch:hover{background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:4px}
+.tnt{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:2px;padding:0;border:0;background:none;color:var(--mute);cursor:pointer;border-radius:4px;flex:none}
+.tnt:focus-visible{outline:2px solid var(--accent)}
+.tnt .chev.cl{transform:rotate(-90deg)}
+.tsp{display:inline-block;width:22px;flex:none}
+.th2{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
+.tdb{display:inline-flex;align-items:center;gap:6px}
+.btn.tdl{padding:3px 10px;font-size:.82rem}
+.tall{margin-left:auto;margin-right:12px}
+.tall .tsel select{min-width:160px}
+.tdb.off{opacity:.45}
+.btn.tdl:disabled{cursor:not-allowed}
+.btn.tdl.on{background:var(--accent);color:var(--bg);border-color:var(--accent)}
+.tsel select{width:100%;padding:4px 26px 4px 8px!important;font-size:.82rem}
+.tsel .chev{right:8px}
+.tsel.no{font-size:.82rem;color:var(--mute)}
+.tsum{display:flex;flex-wrap:wrap;gap:6px 22px;margin:4px 0 10px;padding:8px 10px;border-radius:6px;background:var(--panel);font-size:.9rem}
+.tsum b{font-variant-numeric:tabular-nums}
 .dd{position:relative;min-width:0}
 .ddb{width:100%;display:flex;align-items:center;gap:8px;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px;min-height:46px;cursor:pointer;text-align:left}
 .ddb:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
@@ -150,6 +221,8 @@ td.cyc{line-height:1.25}
 <div class="topbar"><h1>Калькулятор планетарной промышленности</h1>
 <div class="tsw" role="group" aria-label="Тема оформления"><button type="button" class="th" data-t="light" aria-pressed="false" title="Светлая" aria-label="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button type="button" class="th" data-t="dark" aria-pressed="false" title="Тёмная" aria-label="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button><button type="button" class="th" data-t="dusk" aria-pressed="false" title="Синяя" aria-label="Синяя тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></button></div></div>
 <p class="sub">EVE Online: добавьте один или несколько товаров (P1–P4) и количество, чтобы узнать, сколько нужно материалов на каждом уровне.</p>
+<div class="tabs" role="tablist"><button type="button" class="tab" role="tab" data-tab="calc">Расчёт материалов</button><button type="button" class="tab" role="tab" data-tab="cmp">Что выгоднее</button></div>
+<div id="vCalc">
 <section class="panel">
 <div id="lines"></div>
 <p class="qwarn" id="qwarn" role="status" hidden>Максимум 1 000 000 000 штук на строку, поэтому количество уменьшено до этого предела.</p>
@@ -164,6 +237,8 @@ td.cyc{line-height:1.25}
 
 <p class="note">В колонке «Заводов» укажите, сколько фабрик делают этот материал одновременно, и время пересчитается. Цикл P1 занимает 30 минут, P2, P3 и P4 по 1 часу. При включённом округлении циклы делятся между заводами целыми числами.</p>
 <p class="note">Рецепты взяты с EVE University Wiki (страница Planetary Commodities, редакция августа 2025). Если Fenris Creations изменит рецепты, поправьте списки в начале скрипта. Один цикл: 3000 P0 → 20 P1; по 40 + 40 P1 → 5 P2; по 10 + 10 (+ 10) P2 → 3 P3; по 6 + 6 + 6 P3 (или 6 + 6 P3 и 40 P1) → 1 P4.</p>
+</div>
+<div id="vCmp" hidden></div>
 <footer class="foot">
 <p>EVE Online, EVE и все связанные с ними логотипы и другие элементы являются товарными знаками Fenris Creations (бывшая CCP Games). Иконки предметов взяты с сервера изображений EVE Online (images.evetech.net), рецепты сверены со Static Data Export (SDE).</p>
 <p>Это неофициальный фанатский калькулятор. Он не связан с Fenris Creations и не одобрен ею.</p>
@@ -297,21 +372,117 @@ function perF(c,n,round){return round?(Math.ceil(c/n-1e-9)||0):c/n}
 function cycCells(c,n,round){return '<td class="q cyc">'+num(c)+(n>1?'<div class="cs" title="по '+fmtN(perF(c,n,round))+' на завод">по '+fmtS(perF(c,n,round))+' на завод</div>':'')+'</td>'}
 // Кнопки «−» и «+» вокруг поля количества заводов
 function stp(inner,what){return '<span class="stp"><button type="button" class="sb" data-d="-1" aria-label="Меньше заводов'+what+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></button>'+inner+'<button type="button" class="sb" data-d="1" aria-label="Больше заводов'+what+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg></button></span>'}
+// ===== Цены и ISK/час =====
+// Цены: POST https://baphomet448.duckdns.org/prices {"type_ids":[...]} → {"id":{"buy_price","sell_price"}}. Не больше 100 ID за запрос.
+var PRICE_URL="https://baphomet448.duckdns.org/prices",PRICE={},PRICE_AT=null,PRICE_ERR="",PRICE_BUSY=false;
+var PHUB="jita",HUB_OK={jita:true,amarr:false},PMODE="sell",PBUY="sell",PBUYIN=true,PTAX=7.5,PBRK=3,PFREE=true,PTIER=0;
+function loadPrices(){
+  if(PRICE_BUSY)return;PRICE_BUSY=true;PRICE_ERR="";renderCmp();
+  var ids=[],seen={};Object.keys(IC).forEach(function(n){var id=IC[n];if(!seen[id]){seen[id]=1;ids.push(id)}});
+  var parts=[];for(var i=0;i<ids.length;i+=100)parts.push(ids.slice(i,i+100));
+  Promise.all(parts.map(function(p){return fetch(PRICE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type_ids:p})}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})}))
+  .then(function(rs){var o={};rs.forEach(function(r){for(var k in r)o[k]=r[k]});PRICE=o;PRICE_AT=new Date();PRICE_BUSY=false;renderCmp()})
+  .catch(function(e){PRICE_BUSY=false;PRICE_ERR=location.hostname.indexOf("github.io")<0?"Цены загружаются только на твоём сайте на GitHub — здесь браузер не даёт обратиться к серверу цен.":"Не удалось загрузить цены ("+(e&&e.message||"ошибка сети")+").";renderCmp()});
+}
+function HN(){return PHUB==="amarr"?"Amarr":"Jita"}
+function pr(n,mode){var p=PRICE[IC[n]];if(!p)return null;var v=(mode||PMODE)==="sell"?p.sell_price:p.buy_price;return v>0?v:null}
+function prSell(n){var v=pr(n);return v==null?null:v*(1-PTAX/100-(PMODE==="sell"?PBRK/100:0))} // брокер — только когда выставляю sell-ордер
+function prBuy(n){if(P0SET[n])return PFREE?0:pr(n,PBUY);return PBUYIN?pr(n,PBUY):0} // покупка: по sell — сразу из sell-ордеров, по buy — своим buy-ордером
+var P0SET={};Object.keys(P1).forEach(function(k){P0SET[P1[k]]=1});
+// Один цикл одного завода: [выход, [[вход, кол-во]...], минут]
+function cyc(n,tk){
+  if(tk==1)return [20,[[P1[n],3000]],30];
+  if(tk==2)return [5,P2[n].map(function(x){return [x,40]}),60];
+  if(tk==3)return [3,P3[n].map(function(x){return [x,10]}),60];
+  return [1,P4[n].map(function(i){return [i[1],i[2]]}),60];
+}
+// Прибыль в час одного завода: продажа продукции минус покупка входов
+function iskH(n,tk){var c=cyc(n,tk),inc=prSell(n);if(inc==null)return null;var cost=0;for(var i=0;i<c[1].length;i++){var p=prBuy(c[1][i][0]);if(p==null)return null;cost+=p*c[1][i][1]}return (c[0]*inc-cost)/(c[2]/60)}
+function iskFmt(v,short){if(v==null||!isFinite(v))return '<span class="no">—</span>';v=v||0;if(Math.abs(v)<0.5)v=0;var a=Math.abs(v),s=a>=1e9?(v/1e9).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млрд":a>=1e6?(v/1e6).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млн":Math.round(v).toLocaleString("ru-RU");return '<span class="'+(v>=0?"pos":"neg")+'">'+s+'</span>'}
+function iskCell(n,tk,f){var v=iskH(n,tk);return v==null?'<span class="no">—</span>':iskFmt(v*f)}
+// Дерево производства: что и сколько нужно на 1 цикл одного завода, вплоть до сырья P0
+var TOPEN={};
+function tierOfName(n){return P4[n]?4:P3[n]?3:P2[n]?2:P1[n]?1:0}
+function qf(x){return (Math.round(x*10)/10).toLocaleString("ru-RU")}
+// Свёрнутые узлы дерева: ключ — путь от корня ("A>B>C")
+var TCOL={};
+// Решение по каждому узлу дерева: build — строю сам, sell/buy — покупаю по этой цене, own — своё сырьё (бесплатно)
+var TDEC={};
+function decDefault(n,depth){var t=tierOfName(n);if(!t)return PFREE?"own":PBUY;if(depth===1&&PBUYIN)return PBUY;return "build"}
+function decOf(key,n,depth){return TDEC[key]||decDefault(n,depth)}
+// Возвращает {h: html, c: стоимость нужного количества или null, если нет цены}
+function treeNode(n,need,depth,path){
+  var t=tierOfName(n),key=path?path+">"+n:n,col=!!TCOL[key],dec=depth?decOf(key,n,depth):"build";
+  var kids="",cost=0,ok=true;
+  if(dec==="build"&&t){var c=cyc(n,t),k=need/c[0];c[1].forEach(function(x){var r=treeNode(x[0],x[1]*k,depth+1,key);kids+=r.h;if(r.c==null)ok=false;else cost+=r.c})}
+  else if(dec==="own")cost=0;
+  else{var p=pr(n,dec);if(p==null)ok=false;else cost=p*need*(dec==="buy"?1+PBRK/100:1)}
+  var hasKids=dec==="build"&&t&&depth>0;
+  var opts=t?(depth?[["build","Строю сам"],["sell","Покупаю "+HN()+" Sell"],["buy","Покупаю "+HN()+" Buy"]]:[]):[["own","Своё (бесплатно)"],["sell","Покупаю "+HN()+" Sell"],["buy","Покупаю "+HN()+" Buy"]];
+  var sel=opts.length?'<span class="selw tsel"><select class="tdec" data-k="'+key.replace(/"/g,"&quot;")+'" aria-label="Как получаю: '+n+'">'+opts.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===dec?' selected':'')+'>'+o[1]+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span>':'<span class="tsel no">Продаю '+HN()+' '+(PMODE==="sell"?"Sell":"Buy")+'</span>';
+  var h='<li class="lv'+t+(depth?'':' troot')+'"><div class="tn lv'+t+(hasKids?' hasch':'')+'"'+(hasKids?' data-k="'+key.replace(/"/g,"&quot;")+'"':'')+'><span class="mn">'+(hasKids?'<button type="button" class="tnt" aria-expanded="'+!col+'" aria-label="Свернуть или развернуть: '+n+'"><span class="chev'+(col?' cl':'')+'">▾</span></button>':'<span class="tsp"></span>')+ic(n)+'<span class="tl">P'+t+'</span><span>'+n+'</span></span><span class="tq">'+qf(need)+' шт</span>'+sel+
+    '<span class="tp" title="'+(depth?'Во что обходится это количество':'Себестоимость цикла по выбранным решениям')+'">'+(ok?Math.round(cost).toLocaleString("ru-RU")+' ISK':'нет цены')+'</span>'+(t?'<span class="ti">'+iskFmt(iskH(n,t))+' ISK/ч</span>':'<span class="ti"></span>')+'</div>';
+  if(hasKids&&!col)h+='<ul>'+kids+'</ul>';else if(!depth&&kids)h+='<ul>'+kids+'</ul>';
+  return {h:h+'</li>',c:ok?cost:null};
+}
+// Свернуть всё дерево до уровня: узлы уровня lv и ниже показываются без детей
+var TDL={}; // выбранный уровень «Показать до» для каждого дерева
+function treeDepth(root,lv){
+  TDL[root]=lv;
+  Object.keys(TCOL).forEach(function(k){if(k===root||k.indexOf(root+">")===0)delete TCOL[k]});
+  if(!lv)return;
+  (function walk(n,path){var t=tierOfName(n),key=path?path+">"+n:n;if(!t)return;if(t<=lv&&path){TCOL[key]=1;return}
+    cyc(n,t)[1].forEach(function(x){walk(x[0],key)})})(root,"");
+}
+// Все узлы дерева (без корня): [ключ, название, глубина]
+function treeKeys(root){var out=[];(function w(n,path,d){var t=tierOfName(n),key=path?path+">"+n:n;if(d)out.push([key,n,d]);if(t)cyc(n,t)[1].forEach(function(x){w(x[0],key,d+1)})})(root,"",0);return out}
+// Общий выбор для всего дерева: build — всё строю сам (сырьё своё), sell/buy — всё покупаю по этой цене
+// «Строю сам» у узла: всё ниже него тоже строится, сырьё P0 — своё
+function treeCascade(key){var parts=key.split(">"),n=parts[parts.length-1];(function w(n,k){var t=tierOfName(n);if(!t)return;cyc(n,t)[1].forEach(function(x){var ck=k+">"+x[0];TDEC[ck]=tierOfName(x[0])?"build":"own";w(x[0],ck)})})(n,key)}
+function treeAll(root,v){treeKeys(root).forEach(function(k){TDEC[k[0]]=tierOfName(k[1])?v:(v==="build"?"own":v)})}
+// Учитываются только узлы, которые реально в цепочке (над ними всё «Строю сам»)
+function treeAllVal(root){var vs={};(function w(n,path,d){var t=tierOfName(n),key=path?path+">"+n:n;if(!t)return;var dec=d?decOf(key,n,d):"build";if(d)vs[dec]=1;if(dec==="build")cyc(n,t)[1].forEach(function(x){w(x[0],key,d+1)})})(root,"",0);var a=Object.keys(vs);return a.length===1?a[0]:"mix"}
+function treeHtml(n,t){var c=cyc(n,t),av=treeAllVal(n),anyB=c[1].some(function(x){return tierOfName(x[0])&&decOf(n+'>'+x[0],x[0],1)==='build'}); // если ничего не строится, «Показать до» не нужно
+  return '<div class="tree"><div class="th2"><span>Один завод за час: '+(c[0]*60/c[2])+' шт (цикл '+(c[2]==30?'полчаса':'1 час')+').</span>'+
+   (t>1?'<span class="tdb tall"><label class="sel2" style="font-size:.85rem">Для всех<span class="selw tsel"><select class="tallsel" data-root="'+n+'" aria-label="Для всех материалов дерева">'+(av==="mix"?'<option value="mix" selected>Разное</option>':'')+[["build","Строю сам"],["sell","Покупаю "+HN()+" Sell"],["buy","Покупаю "+HN()+" Buy"]].map(function(o){return '<option value="'+o[0]+'"'+(o[0]===av?' selected':'')+'>'+o[1]+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label></span>':'')+(t>1?'<span class="tdb'+(anyB?'':' off')+'" data-root="'+n+'" title="'+(anyB?'':'Все входы покупаются — раскрывать нечего')+'">Показать до:'+[3,2,1,0].filter(function(l){return l<t}).map(function(l){var on=anyB&&(TDL[n]||0)===l;return '<button type="button" class="btn tdl'+(on?' on':'')+'" data-lv="'+l+'" aria-pressed="'+on+'"'+(anyB?'':' disabled')+'>'+(l?'P'+l:'P0 (всё)')+'</button>'}).join("")+'</span>':'')+
+   '</div>'+(function(){var ph=c[0]*60/c[2],r=treeNode(n,ph,0,""),rev=prSell(n),inc=rev==null?null:rev*ph,pf=(inc==null||r.c==null)?null:inc-r.c,hrs=1; // всё за 1 час работы завода
+     return '<ul class="tr0">'+r.h+'</ul>'})()+'</div>'}
+// Вкладка «Что выгоднее»: прибыль в час одного завода для всех товаров
+function renderCmp(){
+  var box=$("vCmp");if(!box)return;
+  var st=PRICE_BUSY?"Загружаю цены…":PRICE_ERR?'<span class="neg">'+PRICE_ERR+'</span>':PRICE_AT?"Цены обновлены в "+PRICE_AT.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):"Цены ещё не загружены";
+  var tiers=PTIER?[PTIER]:[1,2,3,4],rows=[];
+  tiers.forEach(function(t){names(t).forEach(function(n){var c=cyc(n,t),sell=prSell(n),r=treeNode(n,c[0],0,""),inc=sell==null?null:sell*c[0],pf=(inc==null||r.c==null)?null:inc-r.c;
+    rows.push({n:n,t:t,v:pf==null?null:pf/(c[2]/60),sell:sell,m:(pf!=null&&inc)?pf/inc:null})})}); // значения — по решениям в дереве (по умолчанию: входы покупаются по sell, сырьё P0 своё)
+  rows.sort(function(a,b){return (b.v==null?-1e18:b.v)-(a.v==null?-1e18:a.v)||a.n.localeCompare(b.n)});
+  var h='<section class="panel"><div class="pbar2">'+
+   '<label class="sel2"><span class="selw"><select id="ptier" aria-label="Показать уровень"><option value="0"'+(!PTIER?" selected":"")+'>Все</option>'+[1,2,3,4].map(function(t){return '<option value="'+t+'"'+(t==PTIER?" selected":"")+'>P'+t+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
+   '<label class="sel2">Продажа<span class="selw"><select id="pmode">'+[["jita","sell","Jita Sell"],["jita","buy","Jita Buy"],["amarr","sell","Amarr Sell"],["amarr","buy","Amarr Buy"]].map(function(o){var dis=o[0]==="amarr"&&!HUB_OK.amarr;return '<option value="'+o[0]+'-'+o[1]+'"'+(o[0]===PHUB&&o[1]===PMODE?" selected":"")+(dis?" disabled":"")+'>'+o[2]+(dis?" — нет цен":"")+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
+   '<label class="sel2"><span class="help" title="Налог зависит от уровня навыка Accounting: каждый уровень снижает его на 11% от базовых 7,5%. Выбери свой уровень.">Налог с продаж <span class="hq">?</span></span><span class="selw"><select id="ptax">'+[0,1,2,3,4,5].map(function(l){var v=+(7.5*(1-0.11*l)).toFixed(3);return '<option value="'+v+'"'+(Math.abs(v-PTAX)<1e-6?" selected":"")+'>'+(Math.round(v*100+1e-6)/100).toFixed(2).replace(".",",")+"% (Accounting "+l+")</option>"}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
+   '<label class="sel2">Налог брокера, %<input id="pbrk" type="number" min="0" max="100" step="0.01" value="'+PBRK+'" class="ptax"></label>'+
+   '</div>'+
+   '<div class="pbar2" style="margin-bottom:0"><span class="note" style="margin:0">'+st+'</span><button type="button" class="btn" id="preload">Обновить цены</button></div>'+
+   '<p class="note">Прибыль одного завода за час: продаёшь то, что он делает, минус стоимость входов. По умолчанию входы P1–P3 покупаются по Jita Sell. Открой дерево товара (стрелка слева), чтобы выбрать для каждого материала: строю сам, покупаю Jita Sell или Jita Buy — цифры в таблице пересчитаются. P1 — цикл 30 минут, P2–P4 — 1 час.</p></section>';
+  h+='<section class="panel"><div class="scroll"><table class="tt cmpt"><colgroup><col class="c-mat"><col class="c-lv"><col class="c-need"><col class="c-cyc"><col class="c-mg"></colgroup><thead><tr><th>Материал</th><th class="q">Уровень</th><th class="q">ISK/ч с завода</th><th class="q">ISK за сутки</th><th class="q">Маржа</th></tr></thead><tbody>'+
+   rows.map(function(r,i){var op=!!TOPEN[r.n];return '<tr class="crow'+(i<3&&r.v>0?' top':'')+(op?' open':'')+'" data-n="'+r.n+'"><td title="'+r.n+'"><span class="mn"><button type="button" class="tgt" aria-expanded="'+op+'" aria-label="Дерево производства: '+r.n+'"><span class="chev">▾</span></button>'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q">P'+r.t+'</td><td class="q"><b>'+iskFmt(r.v)+'</b></td><td class="q">'+iskFmt(r.v==null?null:r.v*24)+'</td><td class="q">'+(r.m==null?'<span class="no">—</span>':'<span class="'+(r.m>=0?"pos":"neg")+'">'+(r.m*100).toLocaleString("ru-RU",{maximumFractionDigits:1})+'%</span>')+'</td></tr>'+(op?'<tr class="trow"><td colspan="5">'+treeHtml(r.n,r.t)+'</td></tr>':'')}).join("")+
+   '</tbody></table></div></section>';
+  box.innerHTML=h;
+}
 function table(rows,tk){
   var time=!!tk,cm=tk==1?30:60,round=$("rnd").checked,sp=tk==2||tk==3;
-  var h='<div class="scroll"><table class="tt"><colgroup><col class="c-mat"><col class="c-need"><col class="c-cyc">'+(time?'<col class="c-fac"><col class="c-time">':'')+'<col></colgroup><thead><tr><th>Материал</th><th class="q">Нужно</th>'+cycHead()+(time?'<th class="q fcell">Заводов</th><th class="q">Время</th>':'')+(sp?'<th class="help" title="Этот ресурс можно добывать и производить на одной и той же планете. Здесь показаны типы планет, где это возможно.">'+hlabel()+'</th>':'<th></th>')+'</tr></thead><tbody>';
+  var h='<div class="scroll"><table class="tt"><colgroup><col class="c-mat"><col class="c-need"><col class="c-cyc">'+(time?'<col class="c-fac"><col class="c-time">':'')+'<col class="c-pl"></colgroup><thead><tr><th>Материал</th><th class="q">Нужно</th>'+cycHead()+(time?'<th class="q fcell">Заводов</th><th class="q">Время</th>':'')+(sp?'<th class="help" title="Этот ресурс можно добывать и производить на одной и той же планете. Здесь показаны типы планет, где это возможно.">'+hlabel()+'</th>':'<th></th>')+'</tr></thead><tbody>';
   rows.forEach(function(r){
     var key=tk+":"+r.n,n=FC[tk]?(FA[tk]||1):(F[key]||FA[tk]||1);
-    h+='<tr><td><span class="mn">'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q"><b>'+num(r.q)+'</b></td>'+cycCells(r.c,n,round)+
+    h+='<tr data-n="'+r.n+'" data-tk="'+tk+'"><td title="'+r.n+'"><span class="mn">'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q"><b>'+num(r.q)+'</b></td>'+cycCells(r.c,n,round)+
     (time?'<td class="q fcell">'+stp('<input class="fac" type="number" min="1" max="9999" step="1" inputmode="numeric" value="'+n+'"'+(FC[tk]?' disabled':'')+' data-key="'+key+'" data-c="'+r.c+'" data-cm="'+cm+'" aria-label="Количество заводов: '+r.n+'">',': '+r.n)+'</td><td class="q tm" data-min="'+tmin(r.c,cm,n,round)+'" title="'+fmtTime(tmin(r.c,cm,n,round))+'">'+fmtTime(tmin(r.c,cm,n,round))+'</td>':'')+(sp?'<td title="'+(single(r.n,tk).length?'Этот ресурс можно добывать и производить на одной и той же планете этого типа':'Нужное сырьё есть только на разных планетах, одной планеты для этого ресурса недостаточно')+'">'+pcell(r.n,tk)+'</td>':'<td></td>')+'</tr>';
   });
   return h+'</tbody></table></div>';
 }
 function rawTable(rows){
-  var h='<div class="scroll"><table class="tt"><colgroup><col class="c-mat"><col class="c-need"><col></colgroup><thead><tr><th>Материал</th><th class="q">Нужно</th><th>Где добывать</th></tr></thead><tbody>';
+  var h='<div class="scroll"><table class="tt"><colgroup><col class="c-mat"><col class="c-need"><col class="c-r3"></colgroup><thead><tr><th>Материал</th><th class="q">Нужно</th><th>Где добывать</th></tr></thead><tbody>';
   rows.forEach(function(r){
     var chips=(PM[r.n]||[]).map(function(p){return '<span class="chip" style="--c:'+PC[p]+'">'+p+'</span>'}).join(" ");
-    h+='<tr><td><span class="mn">'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q"><b>'+num(r.q)+'</b></td><td>'+chips+'</td></tr>';
+    h+='<tr><td title="'+r.n+'"><span class="mn">'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q"><b>'+num(r.q)+'</b></td><td>'+chips+'</td></tr>';
   });
   return h+'</tbody></table></div>';
 }
@@ -588,7 +759,23 @@ function sbStep(b){
   box.addEventListener("click",function(e){var b=e.target.closest(".sb");if(!b)return;e.preventDefault();if(e.detail===0)sbStep(b)});
 });
 ["pointerup","pointercancel"].forEach(function(ev){document.addEventListener(ev,sbStop)});window.addEventListener("blur",sbStop);
+var TAB="calc";try{var _t=localStorage.getItem("pi-tab");if(_t==="calc"||_t==="cmp")TAB=_t}catch(e){}
+function setTab(t){TAB=t;try{localStorage.setItem("pi-tab",t)}catch(e){}document.querySelectorAll(".tab").forEach(function(b){var on=b.dataset.tab===t;b.classList.toggle("on",on);b.setAttribute("aria-selected",on)});$("vCalc").hidden=t!=="calc";$("vCmp").hidden=t!=="cmp";if(t==="cmp")renderCmp()}
+document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){setTab(b.dataset.tab)})});
+$("vCmp").addEventListener("click",function(e){
+  if(e.target.id==="preload"){loadPrices();return}
+  var dl=e.target.closest(".tdl");if(dl){treeDepth(dl.parentNode.dataset.root,+dl.dataset.lv);renderCmp();return}
+  if(e.target.closest(".tsel"))return;
+  var nd=e.target.closest(".tn.hasch");if(nd&&nd.dataset.k&&nd.closest(".tr0")&&nd.dataset.k.indexOf(">")>0){var k=nd.dataset.k;if(TCOL[k])delete TCOL[k];else TCOL[k]=1;renderCmp();var nb=document.querySelector('#vCmp .tn[data-k="'+k.replace(/"/g,'\\"')+'"] .tnt');if(nb&&e.target.closest(".tnt"))nb.focus();return}
+  var tr=e.target.closest("tr.crow");if(!tr)return;
+  var n=tr.dataset.n;if(TOPEN[n])delete TOPEN[n];else TOPEN[n]=1;renderCmp();
+  var b=document.querySelector('#vCmp tr.crow[data-n="'+n.replace(/"/g,'\\"')+'"] .tgt');if(b&&e.target.closest(".tgt"))b.focus();
+});
+$("vCmp").addEventListener("change",function(e){if(e.target.classList.contains("tallsel")){if(e.target.value!=="mix"){var r=e.target.dataset.root;treeAll(r,e.target.value);renderCmp();var s2=document.querySelector('#vCmp select.tallsel[data-root="'+r.replace(/"/g,'\\"')+'"]');if(s2)s2.focus()}return}if(e.target.classList.contains("tdec")){TDEC[e.target.dataset.k]=e.target.value;if(e.target.value==="build")treeCascade(e.target.dataset.k);var k=e.target.dataset.k;renderCmp();var s=document.querySelector('#vCmp select.tdec[data-k="'+k.replace(/"/g,'\\"')+'"]');if(s)s.focus();return}var id=e.target.id;if(id==="pmode"){var hv=e.target.value.split("-");PHUB=hv[0];PMODE=hv[1]}else if(id==="ptier")PTIER=+e.target.value;else return;renderCmp()});
+$("vCmp").addEventListener("change",function(e){if(e.target.id==="ptax"){PTAX=+e.target.value;renderCmp()}if(e.target.id==="pbrk"){PBRK=Math.max(0,Math.min(100,+e.target.value||0));renderCmp()}});
+setTab(TAB);
 drawLines();calc();
+loadPrices();setInterval(loadPrices,5*60*1000);
 </script>
 </body>
 </html>

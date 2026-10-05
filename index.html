@@ -174,7 +174,7 @@ tr.trow td{height:auto!important;white-space:normal;padding:4px 8px 16px;backgro
 .tn .tl{display:inline-block;min-width:26px;margin:0 8px 0 2px;padding:0 5px;border:1px solid color-mix(in srgb,var(--lc) 70%,transparent);border-radius:4px;background:color-mix(in srgb,var(--lc) 16%,transparent);color:var(--lc);font-size:.7rem;font-weight:700;text-align:center;line-height:1.6}
 .tree ul.tr0{padding-left:0;margin-left:0;border-left:0}
 .tree li{margin:0}
-.tn{display:grid;grid-template-columns:minmax(220px,1fr) 100px 170px 140px 130px;align-items:center;gap:8px;padding:4px 0;font-size:.92rem}
+.tn{display:grid;grid-template-columns:minmax(220px,1fr) 90px 150px 120px 130px 130px;align-items:center;gap:8px;padding:4px 0;font-size:.92rem}
 .tn .tq{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}
 .tn .tp{text-align:right;color:var(--mute);font-size:.85rem;font-variant-numeric:tabular-nums}
 .tn .ti{text-align:right;font-size:.85rem;font-variant-numeric:tabular-nums}
@@ -213,6 +213,11 @@ tr.trow td{height:auto!important;white-space:normal;padding:4px 8px 16px;backgro
 .ddl li.act{background:var(--chip)}
 .ddl li[aria-selected="true"]{color:var(--accent);font-weight:600}
 .ddl .empty{color:var(--mute);cursor:default}
+.tn.thd{border:0!important;background:none!important;font-size:.8rem;color:var(--mute);font-weight:600;padding:0 10px 0 56px;margin:0}
+.vd{font-weight:600;white-space:nowrap}
+input.pq{width:200px;font:inherit;font-size:.9rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
+input.pq:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+table.tt col.c-pr{width:120px}table.tt col.c-src{width:130px}.crow .srcc .chev{transform:translateY(-50%)!important}.tsel.own select{border-color:var(--accent);color:var(--accent)}.srcc .tsel select{width:100%}table.tt col.c-vd{width:150px}
 </style>
 <script>try{var t=localStorage.getItem("pi-theme");if(t==="light"||t==="dark"||t==="dusk")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
@@ -221,7 +226,7 @@ tr.trow td{height:auto!important;white-space:normal;padding:4px 8px 16px;backgro
 <div class="topbar"><h1>Калькулятор планетарной промышленности</h1>
 <div class="tsw" role="group" aria-label="Тема оформления"><button type="button" class="th" data-t="light" aria-pressed="false" title="Светлая" aria-label="Светлая тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg></button><button type="button" class="th" data-t="dark" aria-pressed="false" title="Тёмная" aria-label="Тёмная тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button><button type="button" class="th" data-t="dusk" aria-pressed="false" title="Синяя" aria-label="Синяя тема"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4z"/><path d="M19 15l.8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8z"/></svg></button></div></div>
 <p class="sub">EVE Online: добавьте один или несколько товаров (P1–P4) и количество, чтобы узнать, сколько нужно материалов на каждом уровне.</p>
-<div class="tabs" role="tablist" hidden><button type="button" class="tab" role="tab" data-tab="calc">Расчёт материалов</button><button type="button" class="tab" role="tab" data-tab="cmp">Что выгоднее</button></div>
+<div class="tabs" role="tablist"><button type="button" class="tab" role="tab" data-tab="calc">Расчёт материалов</button><button type="button" class="tab" role="tab" data-tab="cmp">Что выгоднее</button></div>
 <div id="vCalc">
 <section class="panel">
 <div id="lines"></div>
@@ -372,61 +377,60 @@ function perF(c,n,round){return round?(Math.ceil(c/n-1e-9)||0):c/n}
 function cycCells(c,n,round){return '<td class="q cyc">'+num(c)+(n>1?'<div class="cs" title="по '+fmtN(perF(c,n,round))+' на завод">по '+fmtS(perF(c,n,round))+' на завод</div>':'')+'</td>'}
 // Кнопки «−» и «+» вокруг поля количества заводов
 function stp(inner,what){return '<span class="stp"><button type="button" class="sb" data-d="-1" aria-label="Меньше заводов'+what+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"/></svg></button>'+inner+'<button type="button" class="sb" data-d="1" aria-label="Больше заводов'+what+'"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg></button></span>'}
-// ===== Цены и ISK/час =====
-// Цены: POST https://baphomet448.duckdns.org/prices {"type_ids":[...]} → {"id":{"buy_price","sell_price"}}. Не больше 100 ID за запрос.
-var PRICE_URL="https://baphomet448.duckdns.org/prices",PRICE={},PRICE_AT=null,PRICE_ERR="",PRICE_BUSY=false;
-var PHUB="jita",HUB_OK={jita:true,amarr:false},PMODE="sell",PBUY="sell",PBUYIN=true,PTAX=7.5,PBRK=3,PFREE=true,PTIER=0;
+// ===== Цены и выгодность переработки =====
+// Цены: POST https://baphomet448.duckdns.org/prices {"type_ids":[...],"stationName":"jita"|"amarr"} → {"id":{"buy_price","sell_price"}}. Не больше 100 ID за запрос.
+var PRICE_URL="https://baphomet448.duckdns.org/prices",PRICE={jita:{},amarr:{}},PRICE_AT=null,PRICE_ERR="",PRICE_BUSY=false;
+var PHUB="jita",HUB_OK={jita:true,amarr:true},PMODE="sell",PTAX=7.5,PBRK=3,PTIER=0,PQ="";
 function loadPrices(){
   if(PRICE_BUSY)return;PRICE_BUSY=true;PRICE_ERR="";renderCmp();
   var ids=[],seen={};Object.keys(IC).forEach(function(n){var id=IC[n];if(!seen[id]){seen[id]=1;ids.push(id)}});
   var parts=[];for(var i=0;i<ids.length;i+=100)parts.push(ids.slice(i,i+100));
-  Promise.all(parts.map(function(p){return fetch(PRICE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type_ids:p})}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()})}))
-  .then(function(rs){var o={};rs.forEach(function(r){for(var k in r)o[k]=r[k]});PRICE=o;PRICE_AT=new Date();PRICE_BUSY=false;renderCmp()})
+  var hubs=["jita","amarr"],jobs=[];hubs.forEach(function(h){parts.forEach(function(p){jobs.push(fetch(PRICE_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({type_ids:p,stationName:h})}).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(function(r){return [h,r]}))})});
+  Promise.all(jobs)
+  .then(function(rs){var o={jita:{},amarr:{}};rs.forEach(function(x){for(var k in x[1])o[x[0]][k]=x[1][k]});PRICE=o;PRICE_AT=new Date();PRICE_BUSY=false;renderCmp()})
   .catch(function(e){PRICE_BUSY=false;PRICE_ERR=location.hostname.indexOf("github.io")<0?"Цены загружаются только на твоём сайте на GitHub — здесь браузер не даёт обратиться к серверу цен.":"Не удалось загрузить цены ("+(e&&e.message||"ошибка сети")+").";renderCmp()});
 }
 function HN(){return PHUB==="amarr"?"Amarr":"Jita"}
-function pr(n,mode){var p=PRICE[IC[n]];if(!p)return null;var v=(mode||PMODE)==="sell"?p.sell_price:p.buy_price;return v>0?v:null}
-function prSell(n){var v=pr(n);return v==null?null:v*(1-PTAX/100-(PMODE==="sell"?PBRK/100:0))} // брокер — только когда выставляю sell-ордер
-function prBuy(n){if(P0SET[n])return PFREE?0:pr(n,PBUY);return PBUYIN?pr(n,PBUY):0} // покупка: по sell — сразу из sell-ордеров, по buy — своим buy-ордером
-var P0SET={};Object.keys(P1).forEach(function(k){P0SET[P1[k]]=1});
-// Один цикл одного завода: [выход, [[вход, кол-во]...], минут]
+// Свой рынок и тип цены для отдельных материалов: MSEL[название]="jita-sell" и т.п.; без записи — общий выбор «Цены»
+var MSEL={};try{MSEL=JSON.parse(localStorage.getItem("pi-msel")||"{}")||{}}catch(e){MSEL={}}
+function saveMsel(){try{localStorage.setItem("pi-msel",JSON.stringify(MSEL))}catch(e){}}
+function src(n){return MSEL[n]||PHUB+"-"+PMODE}
+var SRC_OPTS=[["jita-sell","Jita Sell"],["jita-buy","Jita Buy"],["amarr-sell","Amarr Sell"],["amarr-buy","Amarr Buy"]];
+function srcSel(n){var own=!!MSEL[n],cur=src(n),g=SRC_OPTS.filter(function(o){return o[0]===PHUB+"-"+PMODE})[0];
+  return '<span class="selw tsel'+(own?' own':'')+'"><select class="msel" data-n="'+n.replace(/"/g,"&quot;")+'" aria-label="Цена для '+n+'" title="'+(own?'Свой выбор для этого материала':'Общий выбор «Цены»: '+g[1])+'"><option value=""'+(own?'':' selected')+'>Общая</option>'+SRC_OPTS.map(function(o){return '<option value="'+o[0]+'"'+(own&&o[0]===cur?' selected':'')+'>'+o[1]+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span>'}
+function pr(n){var s=src(n).split("-"),p=(PRICE[s[0]]||{})[IC[n]];if(!p)return null;var v=s[1]==="sell"?p.sell_price:p.buy_price;return v>0?v:null}
+// Доля, которая остаётся после продажи: налог с продаж + брокер (брокер — только при продаже своим sell-ордером)
+function netK(n){return 1-PTAX/100-(src(n).split("-")[1]==="sell"?PBRK/100:0)}
+// Один цикл: [выход, [[вход, кол-во]...]]
 function cyc(n,tk){
-  if(tk==1)return [20,[[P1[n],3000]],30];
-  if(tk==2)return [5,P2[n].map(function(x){return [x,40]}),60];
-  if(tk==3)return [3,P3[n].map(function(x){return [x,10]}),60];
-  return [1,P4[n].map(function(i){return [i[1],i[2]]}),60];
+  if(tk==1)return [20,[[P1[n],3000]]];
+  if(tk==2)return [5,P2[n].map(function(x){return [x,40]})];
+  if(tk==3)return [3,P3[n].map(function(x){return [x,10]})];
+  return [1,P4[n].map(function(i){return [i[1],i[2]]})];
 }
-// Прибыль в час одного завода: продажа продукции минус покупка входов
-function iskH(n,tk){var c=cyc(n,tk),inc=prSell(n);if(inc==null)return null;var cost=0;for(var i=0;i<c[1].length;i++){var p=prBuy(c[1][i][0]);if(p==null)return null;cost+=p*c[1][i][1]}return (c[0]*inc-cost)/(c[2]/60)}
-function iskFmt(v,short){if(v==null||!isFinite(v))return '<span class="no">—</span>';v=v||0;if(Math.abs(v)<0.5)v=0;var a=Math.abs(v),s=a>=1e9?(v/1e9).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млрд":a>=1e6?(v/1e6).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млн":Math.round(v).toLocaleString("ru-RU");return '<span class="'+(v>=0?"pos":"neg")+'">'+s+'</span>'}
-function iskCell(n,tk,f){var v=iskH(n,tk);return v==null?'<span class="no">—</span>':iskFmt(v*f)}
-// Дерево производства: что и сколько нужно на 1 цикл одного завода, вплоть до сырья P0
-var TOPEN={};
 function tierOfName(n){return P4[n]?4:P3[n]?3:P2[n]?2:P1[n]?1:0}
 function qf(x){return (Math.round(x*10)/10).toLocaleString("ru-RU")}
-// Свёрнутые узлы дерева: ключ — путь от корня ("A>B>C")
-var TCOL={};
-// Решение по каждому узлу дерева: build — строю сам, sell/buy — покупаю по этой цене, own — своё сырьё (бесплатно)
-var TDEC={};
-function decDefault(n,depth){var t=tierOfName(n);if(!t)return PFREE?"own":PBUY;if(depth===1&&PBUYIN)return PBUY;return "build"}
-function decOf(key,n,depth){return TDEC[key]||decDefault(n,depth)}
-// Возвращает {h: html, c: стоимость нужного количества или null, если нет цены}
+// Стоимость входов на 1 шт продукта по рыночной цене (null, если нет хотя бы одной цены)
+// Стоимость входов на 1 шт: [по рыночной цене, сколько выручишь, если продать входы (после налогов)]
+function costOf(n,t){var c=cyc(n,t),s=0,sn=0;for(var i=0;i<c[1].length;i++){var x=c[1][i][0],p=pr(x);if(p==null)return null;s+=p*c[1][i][1];sn+=p*c[1][i][1]*netK(x)}return [s/c[0],sn/c[0]]}
+// Сравнение: продать продукт или продать входы, из которых он сделан. Разница считается после налогов.
+function cmpOf(n){var t=tierOfName(n),p=pr(n),cc=t?costOf(n,t):null,c=cc&&cc[0],cn=cc&&cc[1],d=(p==null||cc==null)?null:p*netK(n)-cn;return {t:t,p:p,c:c,cn:cn,d:d,m:(d==null||!c)?null:(p-c)/c}}
+function isk(v){if(v==null||!isFinite(v))return '<span class="no">—</span>';var a=Math.abs(v);return a>=1e9?(v/1e9).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млрд":a>=1e6?(v/1e6).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млн":a>=100?Math.round(v).toLocaleString("ru-RU"):v.toLocaleString("ru-RU",{maximumFractionDigits:2})}
+function iskPN(v){if(v==null||!isFinite(v))return '<span class="no">—</span>';if(Math.abs(v)<0.005)v=0;return '<span class="'+(v>=0?"pos":"neg")+'">'+(v>0?"+":"")+isk(v)+'</span>'}
+function pct(m){return m==null?'<span class="no">—</span>':'<span class="'+(m>=0?"pos":"neg")+'">'+(m>0?"+":"")+(m*100).toLocaleString("ru-RU",{maximumFractionDigits:1})+'%</span>'}
+function verdict(r){if(r.d==null)return '<span class="no">—</span>';return r.d>=0?'<span class="vd pos">Переработать</span>':'<span class="vd neg">Продать входы</span>'}
+var TOPEN={},TCOL={},TDL={};
+// Узел дерева: количество, цена за шт, сумма; у материалов с рецептом — сравнение с их входами
 function treeNode(n,need,depth,path){
-  var t=tierOfName(n),key=path?path+">"+n:n,col=!!TCOL[key],dec=depth?decOf(key,n,depth):"build";
-  var kids="",cost=0,ok=true,fh=0; // fh — заводо-часы на «Строю сам» ниже корня
-  if(dec==="build"&&t){var c=cyc(n,t),k=need/c[0];if(depth)fh+=k*c[2]/60;c[1].forEach(function(x){var r=treeNode(x[0],x[1]*k,depth+1,key);kids+=r.h;fh+=r.f;if(r.c==null)ok=false;else cost+=r.c})}
-  else if(dec==="own")cost=0;
-  else{var p=pr(n,dec);if(p==null)ok=false;else cost=p*need*(dec==="buy"?1+PBRK/100:1)}
-  var hasKids=dec==="build"&&t&&depth>0;
-  var opts=t?(depth?[["build","Строю сам"],["sell","Покупаю "+HN()+" Sell"],["buy","Покупаю "+HN()+" Buy"]]:[]):[["own","Своё (бесплатно)"],["sell","Покупаю "+HN()+" Sell"],["buy","Покупаю "+HN()+" Buy"]];
-  var sel=opts.length?'<span class="selw tsel"><select class="tdec" data-k="'+key.replace(/"/g,"&quot;")+'" aria-label="Как получаю: '+n+'">'+opts.map(function(o){return '<option value="'+o[0]+'"'+(o[0]===dec?' selected':'')+'>'+o[1]+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span>':'<span class="tsel no">Продаю '+HN()+' '+(PMODE==="sell"?"Sell":"Buy")+'</span>';
-  var h='<li class="lv'+t+(depth?'':' troot')+'"><div class="tn lv'+t+(hasKids?' hasch':'')+'"'+(hasKids?' data-k="'+key.replace(/"/g,"&quot;")+'"':'')+'><span class="mn">'+(hasKids?'<button type="button" class="tnt" aria-expanded="'+!col+'" aria-label="Свернуть или развернуть: '+n+'"><span class="chev'+(col?' cl':'')+'">▾</span></button>':'<span class="tsp"></span>')+ic(n)+'<span class="tl">P'+t+'</span><span>'+n+'</span></span><span class="tq">'+qf(need)+' шт</span>'+sel+
-    '<span class="tp" title="'+(depth?'Во что обходится это количество':'Себестоимость цикла по выбранным решениям')+'">'+(ok?Math.round(cost).toLocaleString("ru-RU")+' ISK':'нет цены')+'</span>'+(t&&dec==="build"?'<span class="ti"'+(depth?'':' title="С учётом всех заводов цепочки"')+'>'+iskFmt(depth?iskH(n,t):(function(){var c0=cyc(n,t),sv=prSell(n);return (sv==null||!ok)?null:(sv*need-cost)/(need/c0[0]*c0[2]/60+fh)})())+' ISK/ч</span>':'<span class="ti"></span>')+'</div>';
-  if(hasKids&&!col)h+='<ul>'+kids+'</ul>';else if(!depth&&kids)h+='<ul>'+kids+'</ul>';
-  return {h:h+'</li>',c:ok?cost:null,f:fh};
+  var t=tierOfName(n),key=path?path+">"+n:n,col=!!TCOL[key],p=pr(n),hasKids=t&&depth>0,kids="";
+  if(t&&(!depth||!col)){var c=cyc(n,t),k=need/c[0];c[1].forEach(function(x){kids+=treeNode(x[0],x[1]*k,depth+1,key)})}
+  var r=t?cmpOf(n):null;
+  var h='<li class="lv'+t+(depth?'':' troot')+'"><div class="tn lv'+t+(hasKids?' hasch':'')+'"'+(hasKids?' data-k="'+key.replace(/"/g,"&quot;")+'"':'')+'><span class="mn">'+(hasKids?'<button type="button" class="tnt" aria-expanded="'+!col+'" aria-label="Свернуть или развернуть: '+n+'"><span class="chev'+(col?' cl':'')+'">▾</span></button>':'<span class="tsp"></span>')+ic(n)+'<span class="tl">P'+t+'</span><span>'+n+'</span></span>'+
+    '<span class="tq">'+qf(need)+' шт</span>'+srcSel(n)+'<span class="tp" title="Цена за 1 шт">'+(p==null?'нет цены':isk(p)+' / шт')+'</span><span class="ti" title="Стоимость этого количества">'+(p==null?'<span class="no">—</span>':isk(p*need)+' ISK')+'</span>'+
+    '<span class="ti" title="'+(t?'Выгода переработки входов в этот материал, на всё количество, после налогов':'Сырьё P0')+'">'+(r&&r.d!=null?iskPN(r.d*need):'')+'</span></div>';
+  if(kids)h+='<ul>'+kids+'</ul>';
+  return h+'</li>';
 }
-// Свернуть всё дерево до уровня: узлы уровня lv и ниже показываются без детей
-var TDL={}; // выбранный уровень «Показать до» для каждого дерева
 function treeDepth(root,lv){
   TDL[root]=lv;
   Object.keys(TCOL).forEach(function(k){if(k===root||k.indexOf(root+">")===0)delete TCOL[k]});
@@ -434,40 +438,33 @@ function treeDepth(root,lv){
   (function walk(n,path){var t=tierOfName(n),key=path?path+">"+n:n;if(!t)return;if(t<=lv&&path){TCOL[key]=1;return}
     cyc(n,t)[1].forEach(function(x){walk(x[0],key)})})(root,"");
 }
-// Все узлы дерева (без корня): [ключ, название, глубина]
-function treeKeys(root){var out=[];(function w(n,path,d){var t=tierOfName(n),key=path?path+">"+n:n;if(d)out.push([key,n,d]);if(t)cyc(n,t)[1].forEach(function(x){w(x[0],key,d+1)})})(root,"",0);return out}
-// Общий выбор для всего дерева: build — всё строю сам (сырьё своё), sell/buy — всё покупаю по этой цене
-// «Строю сам» у узла: всё ниже него тоже строится, сырьё P0 — своё
-function treeCascade(key){var parts=key.split(">"),n=parts[parts.length-1];(function w(n,k){var t=tierOfName(n);if(!t)return;cyc(n,t)[1].forEach(function(x){var ck=k+">"+x[0];TDEC[ck]=tierOfName(x[0])?"build":"own";w(x[0],ck)})})(n,key)}
-function treeAll(root,v){treeKeys(root).forEach(function(k){TDEC[k[0]]=tierOfName(k[1])?v:(v==="build"?"own":v)})}
-// Учитываются только узлы, которые реально в цепочке (над ними всё «Строю сам»)
-function treeAllVal(root){var vs={};(function w(n,path,d){var t=tierOfName(n),key=path?path+">"+n:n;if(!t)return;var dec=d?decOf(key,n,d):"build";if(d)vs[dec]=1;if(dec==="build")cyc(n,t)[1].forEach(function(x){w(x[0],key,d+1)})})(root,"",0);var a=Object.keys(vs);return a.length===1?a[0]:"mix"}
-function treeHtml(n,t){var c=cyc(n,t),av=treeAllVal(n),anyB=c[1].some(function(x){return tierOfName(x[0])&&decOf(n+'>'+x[0],x[0],1)==='build'}); // если ничего не строится, «Показать до» не нужно
-  var R0=treeNode(n,c[0]*60/c[2],0,""),FN=1+R0.f;
-  return '<div class="tree"><div class="th2"><span>Один завод за час: '+(c[0]*60/c[2])+' шт (цикл '+(c[2]==30?'полчаса':'1 час')+').'+(R0.f>1e-9?' <span class="help" title="Сколько заводов нужно, чтобы входы со «Строю сам» успевали за главным заводом. Прибыль в таблице делится на все эти заводы.">Заводов в цепочке: <b>'+(+FN.toFixed(2)).toLocaleString("ru-RU")+'</b> <span class="hq">?</span></span>':'')+'</span>'+
-   (t>1?'<span class="tdb tall"><label class="sel2" style="font-size:.85rem">Для всех<span class="selw tsel"><select class="tallsel" data-root="'+n+'" aria-label="Для всех материалов дерева">'+(av==="mix"?'<option value="mix" selected>Разное</option>':'')+[["build","Строю сам"],["sell","Покупаю "+HN()+" Sell"],["buy","Покупаю "+HN()+" Buy"]].map(function(o){return '<option value="'+o[0]+'"'+(o[0]===av?' selected':'')+'>'+o[1]+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label></span>':'')+(t>1?'<span class="tdb'+(anyB?'':' off')+'" data-root="'+n+'" title="'+(anyB?'':'Все входы покупаются — раскрывать нечего')+'">Показать до:'+[3,2,1,0].filter(function(l){return l<t}).map(function(l){var on=anyB&&(TDL[n]||0)===l;return '<button type="button" class="btn tdl'+(on?' on':'')+'" data-lv="'+l+'" aria-pressed="'+on+'"'+(anyB?'':' disabled')+'>'+(l?'P'+l:'P0 (всё)')+'</button>'}).join("")+'</span>':'')+
-   '</div>'+(function(){var ph=c[0]*60/c[2],r=R0,rev=prSell(n),inc=rev==null?null:rev*ph,pf=(inc==null||r.c==null)?null:inc-r.c,hrs=1; // всё за 1 час работы завода
-     return '<ul class="tr0">'+r.h+'</ul>'})()+'</div>'}
-// Вкладка «Что выгоднее»: прибыль в час одного завода для всех товаров
+function treeHtml(n,t){var c=cyc(n,t),r=cmpOf(n),k=netK(n),p=r.p,cs=r.cn;
+  var sum='<div class="tsum"><span>Продать '+c[0]+' шт '+n+': <b>'+(p==null?'—':isk(p*c[0]*k))+'</b> ISK</span><span>Продать входы: <b>'+(cs==null?'—':isk(cs*c[0]))+'</b> ISK</span><span>Разница: <b>'+iskPN(r.d==null?null:r.d*c[0])+'</b> ISK</span><span>'+verdict(r)+'</span></div>';
+  return '<div class="tree"><div class="th2">'+
+   (t>1?'<span class="tdb" data-root="'+n+'">Показать до:'+[3,2,1,0].filter(function(l){return l<t}).map(function(l){var on=(TDL[n]||0)===l;return '<button type="button" class="btn tdl'+(on?' on':'')+'" data-lv="'+l+'" aria-pressed="'+on+'">'+(l?'P'+l:'P0 (всё)')+'</button>'}).join("")+'</span>':'')+
+   '</div>'+sum+'<div class="tn thd"><span>Материал</span><span class="tq">Нужно</span><span>Цена из</span><span class="tp">Цена</span><span class="ti">Стоимость</span><span class="ti">Выгода переработки</span></div><ul class="tr0">'+treeNode(n,c[0],0,"")+'</ul></div>'}
+// Вкладка «Что выгоднее»: цены материалов и сравнение «переработать или продать входы»
 function renderCmp(){
   var box=$("vCmp");if(!box)return;
   var st=PRICE_BUSY?"Загружаю цены…":PRICE_ERR?'<span class="neg">'+PRICE_ERR+'</span>':PRICE_AT?"Цены обновлены в "+PRICE_AT.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):"Цены ещё не загружены";
-  var tiers=PTIER?[PTIER]:[1,2,3,4],rows=[];
-  tiers.forEach(function(t){names(t).forEach(function(n){var c=cyc(n,t),sell=prSell(n),r=treeNode(n,c[0],0,""),inc=sell==null?null:sell*c[0],pf=(inc==null||r.c==null)?null:inc-r.c;
-    rows.push({n:n,t:t,v:pf==null?null:pf/(c[2]/60+r.f),sell:sell,m:(pf!=null&&inc)?pf/inc:null})})}); // значения — по решениям в дереве (по умолчанию: входы покупаются по sell, сырьё P0 своё)
-  rows.sort(function(a,b){return (b.v==null?-1e18:b.v)-(a.v==null?-1e18:a.v)||a.n.localeCompare(b.n)});
+  var tiers=PTIER?[PTIER]:[1,2,3,4],rows=[],q=PQ.trim().toLowerCase();
+  tiers.forEach(function(t){names(t).forEach(function(n){if(q&&n.toLowerCase().indexOf(q)<0)return;var r=cmpOf(n);r.n=n;rows.push(r)})});
+  rows.sort(function(a,b){return (b.m==null?-1e18:b.m)-(a.m==null?-1e18:a.m)||a.n.localeCompare(b.n)});
+  var foc=document.activeElement&&document.activeElement.id==="pq",sp=foc?document.activeElement.selectionStart:0;
   var h='<section class="panel"><div class="pbar2">'+
-   '<label class="sel2"><span class="selw"><select id="ptier" aria-label="Показать уровень"><option value="0"'+(!PTIER?" selected":"")+'>Все</option>'+[1,2,3,4].map(function(t){return '<option value="'+t+'"'+(t==PTIER?" selected":"")+'>P'+t+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
-   '<label class="sel2">Продажа<span class="selw"><select id="pmode">'+[["jita","sell","Jita Sell"],["jita","buy","Jita Buy"],["amarr","sell","Amarr Sell"],["amarr","buy","Amarr Buy"]].map(function(o){var dis=o[0]==="amarr"&&!HUB_OK.amarr;return '<option value="'+o[0]+'-'+o[1]+'"'+(o[0]===PHUB&&o[1]===PMODE?" selected":"")+(dis?" disabled":"")+'>'+o[2]+(dis?" — нет цен":"")+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
+   '<label class="sel2"><span class="selw"><select id="ptier" aria-label="Показать уровень"><option value="0"'+(!PTIER?" selected":"")+'>Все уровни</option>'+[1,2,3,4].map(function(t){return '<option value="'+t+'"'+(t==PTIER?" selected":"")+'>P'+t+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
+   '<label class="sel2"><input id="pq" type="search" class="pq" placeholder="Поиск материала" value="'+PQ.replace(/"/g,"&quot;")+'" aria-label="Поиск материала"></label>'+
+   '<label class="sel2">Цены<span class="selw"><select id="pmode">'+[["jita","sell","Jita Sell"],["jita","buy","Jita Buy"],["amarr","sell","Amarr Sell"],["amarr","buy","Amarr Buy"]].map(function(o){var dis=o[0]==="amarr"&&!HUB_OK.amarr;return '<option value="'+o[0]+'-'+o[1]+'"'+(o[0]===PHUB&&o[1]===PMODE?" selected":"")+(dis?" disabled":"")+'>'+o[2]+(dis?" — нет цен":"")+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
    '<label class="sel2"><span class="help" title="Налог зависит от уровня навыка Accounting: каждый уровень снижает его на 11% от базовых 7,5%. Выбери свой уровень.">Налог с продаж <span class="hq">?</span></span><span class="selw"><select id="ptax">'+[0,1,2,3,4,5].map(function(l){var v=+(7.5*(1-0.11*l)).toFixed(3);return '<option value="'+v+'"'+(Math.abs(v-PTAX)<1e-6?" selected":"")+'>'+(Math.round(v*100+1e-6)/100).toFixed(2).replace(".",",")+"% (Accounting "+l+")</option>"}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
    '<label class="sel2">Налог брокера, %<input id="pbrk" type="number" min="0" max="100" step="0.01" value="'+PBRK+'" class="ptax"></label>'+
    '</div>'+
    '<div class="pbar2" style="margin-bottom:0"><span class="note" style="margin:0">'+st+'</span><button type="button" class="btn" id="preload">Обновить цены</button></div>'+
-   '<p class="note">Прибыль в час на один завод: продаёшь то, что делает главный завод, минус стоимость входов. Если вход «Строю сам», его заводы тоже считаются, и прибыль делится на все заводы цепочки. По умолчанию входы P1–P3 покупаются по Jita Sell. Открой дерево товара (стрелка слева), чтобы выбрать для каждого материала: строю сам, покупаю Jita Sell или Jita Buy — цифры в таблице пересчитаются. P1 — цикл 30 минут, P2–P4 — 1 час.</p></section>';
-  h+='<section class="panel"><div class="scroll"><table class="tt cmpt"><colgroup><col class="c-mat"><col class="c-lv"><col class="c-need"><col class="c-cyc"><col class="c-mg"></colgroup><thead><tr><th>Материал</th><th class="q">Уровень</th><th class="q">ISK/ч с завода</th><th class="q">ISK за сутки</th><th class="q">Маржа</th></tr></thead><tbody>'+
-   rows.map(function(r,i){var op=!!TOPEN[r.n];return '<tr class="crow'+(i<3&&r.v>0?' top':'')+(op?' open':'')+'" data-n="'+r.n+'"><td title="'+r.n+'"><span class="mn"><button type="button" class="tgt" aria-expanded="'+op+'" aria-label="Дерево производства: '+r.n+'"><span class="chev">▾</span></button>'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q">P'+r.t+'</td><td class="q"><b>'+iskFmt(r.v)+'</b></td><td class="q">'+iskFmt(r.v==null?null:r.v*24)+'</td><td class="q">'+(r.m==null?'<span class="no">—</span>':'<span class="'+(r.m>=0?"pos":"neg")+'">'+(r.m*100).toLocaleString("ru-RU",{maximumFractionDigits:1})+'%</span>')+'</td></tr>'+(op?'<tr class="trow"><td colspan="5">'+treeHtml(r.n,r.t)+'</td></tr>':'')}).join("")+
+   '<p class="note">Все цены за 1 шт. В колонке «Цена из» можно выбрать для любого материала свой рынок и тип цены — выбор действует и в таблице, и в деревьях. Себестоимость — сколько стоят на рынке входы, из которых делается 1 шт. Выгода — сколько ISK получишь сверху, если переработаешь входы и продашь продукт, а не продашь сами входы (после налогов). Плюс — выгоднее переработать, минус — выгоднее продать входы. Например, для P4: сделать P4 из P3 или продать все P3. Открой строку, чтобы увидеть дерево производства с ценами каждого материала.</p></section>';
+  h+='<section class="panel"><div class="scroll"><table class="tt cmpt"><colgroup><col class="c-mat"><col class="c-lv"><col class="c-src"><col class="c-pr"><col class="c-pr"><col class="c-pr"><col class="c-mg"><col class="c-vd"></colgroup><thead><tr><th>Материал</th><th class="q">Уровень</th><th>Цена из</th><th class="q">Цена</th><th class="q">Себестоимость</th><th class="q">Выгода</th><th class="q">Наценка</th><th>Что выгоднее</th></tr></thead><tbody>'+
+   (rows.length?rows.map(function(r){var op=!!TOPEN[r.n];return '<tr class="crow'+(op?' open':'')+'" data-n="'+r.n+'"><td title="'+r.n+'"><span class="mn"><button type="button" class="tgt" aria-expanded="'+op+'" aria-label="Дерево производства: '+r.n+'"><span class="chev">▾</span></button>'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q">P'+r.t+'</td><td class="srcc">'+srcSel(r.n)+'</td><td class="q"><b>'+isk(r.p)+'</b></td><td class="q">'+isk(r.c)+'</td><td class="q">'+iskPN(r.d)+'</td><td class="q">'+pct(r.m)+'</td><td>'+verdict(r)+'</td></tr>'+(op?'<tr class="trow"><td colspan="8">'+treeHtml(r.n,r.t)+'</td></tr>':'')}).join(""):'<tr><td colspan="8" class="no">Ничего не найдено</td></tr>')+
    '</tbody></table></div></section>';
   box.innerHTML=h;
+  if(foc){var e=$("pq");e.focus();try{e.setSelectionRange(sp,sp)}catch(x){}}
 }
 function table(rows,tk){
   var time=!!tk,cm=tk==1?30:60,round=$("rnd").checked,sp=tk==2||tk==3;
@@ -760,21 +757,28 @@ function sbStep(b){
   box.addEventListener("click",function(e){var b=e.target.closest(".sb");if(!b)return;e.preventDefault();if(e.detail===0)sbStep(b)});
 });
 ["pointerup","pointercancel"].forEach(function(ev){document.addEventListener(ev,sbStop)});window.addEventListener("blur",sbStop);
-var CMP_ON=false; // вкладка «Что выгоднее» пока отключена
+var CMP_ON=true; // вкладка «Что выгоднее»: цены и выгода переработки
 var TAB="calc";try{var _t=localStorage.getItem("pi-tab");if(_t==="calc"||(_t==="cmp"&&CMP_ON))TAB=_t}catch(e){}
 function setTab(t){TAB=t;try{localStorage.setItem("pi-tab",t)}catch(e){}document.querySelectorAll(".tab").forEach(function(b){var on=b.dataset.tab===t;b.classList.toggle("on",on);b.setAttribute("aria-selected",on)});$("vCalc").hidden=t!=="calc";$("vCmp").hidden=t!=="cmp";if(t==="cmp")renderCmp()}
 document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){setTab(b.dataset.tab)})});
 $("vCmp").addEventListener("click",function(e){
   if(e.target.id==="preload"){loadPrices();return}
+  if(e.target.closest(".tsel"))return; // выбор цены не сворачивает строку
   var dl=e.target.closest(".tdl");if(dl){treeDepth(dl.parentNode.dataset.root,+dl.dataset.lv);renderCmp();return}
-  if(e.target.closest(".tsel"))return;
   var nd=e.target.closest(".tn.hasch");if(nd&&nd.dataset.k&&nd.closest(".tr0")&&nd.dataset.k.indexOf(">")>0){var k=nd.dataset.k;if(TCOL[k])delete TCOL[k];else TCOL[k]=1;renderCmp();var nb=document.querySelector('#vCmp .tn[data-k="'+k.replace(/"/g,'\\"')+'"] .tnt');if(nb&&e.target.closest(".tnt"))nb.focus();return}
   var tr=e.target.closest("tr.crow");if(!tr)return;
-  var n=tr.dataset.n;if(TOPEN[n])delete TOPEN[n];else TOPEN[n]=1;renderCmp();
+  var n=tr.dataset.n;if(TOPEN[n])delete TOPEN[n];else{TOPEN[n]=1;var t0=tierOfName(n);if(TDL[n]==null&&t0>1)treeDepth(n,t0-1)}renderCmp(); // по умолчанию дерево открыто на один уровень вниз
   var b=document.querySelector('#vCmp tr.crow[data-n="'+n.replace(/"/g,'\\"')+'"] .tgt');if(b&&e.target.closest(".tgt"))b.focus();
 });
-$("vCmp").addEventListener("change",function(e){if(e.target.classList.contains("tallsel")){if(e.target.value!=="mix"){var r=e.target.dataset.root;treeAll(r,e.target.value);renderCmp();var s2=document.querySelector('#vCmp select.tallsel[data-root="'+r.replace(/"/g,'\\"')+'"]');if(s2)s2.focus()}return}if(e.target.classList.contains("tdec")){TDEC[e.target.dataset.k]=e.target.value;if(e.target.value==="build")treeCascade(e.target.dataset.k);var k=e.target.dataset.k;renderCmp();var s=document.querySelector('#vCmp select.tdec[data-k="'+k.replace(/"/g,'\\"')+'"]');if(s)s.focus();return}var id=e.target.id;if(id==="pmode"){var hv=e.target.value.split("-");PHUB=hv[0];PMODE=hv[1]}else if(id==="ptier")PTIER=+e.target.value;else return;renderCmp()});
-$("vCmp").addEventListener("change",function(e){if(e.target.id==="ptax"){PTAX=+e.target.value;renderCmp()}if(e.target.id==="pbrk"){PBRK=Math.max(0,Math.min(100,+e.target.value||0));renderCmp()}});
+$("vCmp").addEventListener("change",function(e){if(!e.target.classList.contains("msel"))return;var n=e.target.dataset.n,v=e.target.value,ins=!!e.target.closest(".tree");if(v)MSEL[n]=v;else delete MSEL[n];saveMsel();renderCmp();var q='#vCmp '+(ins?".tree ":"tr.crow ")+'select.msel[data-n="'+n.replace(/"/g,'\\"')+'"]',s=document.querySelector(q);if(s)s.focus()});
+$("vCmp").addEventListener("input",function(e){if(e.target.id==="pq"){PQ=e.target.value;renderCmp()}});
+$("vCmp").addEventListener("change",function(e){var id=e.target.id;
+  if(id==="pmode"){var hv=e.target.value.split("-");PHUB=hv[0];PMODE=hv[1]}
+  else if(id==="ptier")PTIER=+e.target.value;
+  else if(id==="ptax")PTAX=+e.target.value;
+  else if(id==="pbrk")PBRK=Math.max(0,Math.min(100,+e.target.value||0));
+  else return;
+  renderCmp();var s=$(id);if(s)s.focus()});
 setTab(TAB);
 drawLines();calc();
 if(CMP_ON){loadPrices();setInterval(loadPrices,5*60*1000)}

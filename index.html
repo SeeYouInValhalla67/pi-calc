@@ -179,10 +179,10 @@ tr.trow td{height:auto!important;white-space:normal;padding:4px 8px 16px;backgro
 .tn .tp{text-align:right;color:var(--mute);font-size:.85rem;font-variant-numeric:tabular-nums}
 .tn .ti{text-align:right;font-size:.85rem;font-variant-numeric:tabular-nums}
 .tn img.ico{width:20px;height:20px}
-.tn.hasch{cursor:pointer}
-.tn.hasch:hover{background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:4px}
 .tnt{display:inline-grid;place-items:center;width:20px;height:20px;margin-right:2px;padding:0;border:0;background:none;color:var(--mute);cursor:pointer;border-radius:4px;flex:none}
 .tnt:focus-visible{outline:2px solid var(--accent)}
+.tree .tnt{width:32px;height:30px;margin:-5px 2px -5px -10px;border-radius:7px 0 0 7px}
+.tree .tnt:hover{background:color-mix(in srgb,var(--lc,var(--accent)) 18%,transparent);color:var(--ink)}
 .tnt .chev.cl{transform:rotate(-90deg)}
 .tsp{display:inline-block;width:22px;flex:none}
 .th2{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px}
@@ -218,6 +218,11 @@ tr.trow td{height:auto!important;white-space:normal;padding:4px 8px 16px;backgro
 input.pq{width:200px;font:inherit;font-size:.9rem;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:6px 10px}
 input.pq:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 table.tt col.c-pr{width:120px}table.tt col.c-src{width:130px}.crow .srcc .chev{transform:translateY(-50%)!important}.tsel.own select{border-color:var(--accent);color:var(--accent)}.srcc .tsel select{width:100%}table.tt col.c-vd{width:150px}
+.sh{display:inline-flex;align-items:center;gap:4px;font:inherit;font-weight:600;color:inherit;background:none;border:0;padding:0;cursor:pointer;white-space:nowrap}
+.sh .sa{font-size:.65rem;opacity:0;transition:opacity .15s}
+.sh:hover .sa{opacity:.45}.sh.on{color:var(--ink)}.sh.on .sa{opacity:1;color:var(--accent)}
+.sh:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:3px}
+.stale{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px;margin:0 0 10px;padding:8px 10px;border-radius:6px;background:var(--chip)}
 </style>
 <script>try{var t=localStorage.getItem("pi-theme");if(t==="light"||t==="dark"||t==="dusk")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
@@ -414,7 +419,7 @@ function qf(x){return (Math.round(x*10)/10).toLocaleString("ru-RU")}
 // Стоимость входов на 1 шт: [по рыночной цене, сколько выручишь, если продать входы (после налогов)]
 function costOf(n,t){var c=cyc(n,t),s=0,sn=0;for(var i=0;i<c[1].length;i++){var x=c[1][i][0],p=pr(x);if(p==null)return null;s+=p*c[1][i][1];sn+=p*c[1][i][1]*netK(x)}return [s/c[0],sn/c[0]]}
 // Сравнение: продать продукт или продать входы, из которых он сделан. Разница считается после налогов.
-function cmpOf(n){var t=tierOfName(n),p=pr(n),cc=t?costOf(n,t):null,c=cc&&cc[0],cn=cc&&cc[1],d=(p==null||cc==null)?null:p*netK(n)-cn;return {t:t,p:p,c:c,cn:cn,d:d,m:(d==null||!c)?null:(p-c)/c}}
+function cmpOf(n){var t=tierOfName(n),p=pr(n),cc=t?costOf(n,t):null,c=cc&&cc[0],cn=cc&&cc[1],d=(p==null||cc==null)?null:p*netK(n)-cn;return {t:t,p:p,c:c,cn:cn,d:d,m:(d==null||!cn)?null:d/cn}} // наценка после налогов: выгода относительно того, что выручишь за входы
 function isk(v){if(v==null||!isFinite(v))return '<span class="no">—</span>';var a=Math.abs(v);return a>=1e9?(v/1e9).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млрд":a>=1e6?(v/1e6).toLocaleString("ru-RU",{maximumFractionDigits:2})+" млн":a>=100?Math.round(v).toLocaleString("ru-RU"):v.toLocaleString("ru-RU",{maximumFractionDigits:2})}
 function iskPN(v){if(v==null||!isFinite(v))return '<span class="no">—</span>';if(Math.abs(v)<0.005)v=0;return '<span class="'+(v>=0?"pos":"neg")+'">'+(v>0?"+":"")+isk(v)+'</span>'}
 function pct(m){return m==null?'<span class="no">—</span>':'<span class="'+(m>=0?"pos":"neg")+'">'+(m>0?"+":"")+(m*100).toLocaleString("ru-RU",{maximumFractionDigits:1})+'%</span>'}
@@ -443,13 +448,20 @@ function treeHtml(n,t){var c=cyc(n,t),r=cmpOf(n),k=netK(n),p=r.p,cs=r.cn;
   return '<div class="tree"><div class="th2">'+
    (t>1?'<span class="tdb" data-root="'+n+'">Показать до:'+[3,2,1,0].filter(function(l){return l<t}).map(function(l){var on=(TDL[n]||0)===l;return '<button type="button" class="btn tdl'+(on?' on':'')+'" data-lv="'+l+'" aria-pressed="'+on+'">'+(l?'P'+l:'P0 (всё)')+'</button>'}).join("")+'</span>':'')+
    '</div>'+sum+'<div class="tn thd"><span>Материал</span><span class="tq">Нужно</span><span>Цена из</span><span class="tp">Цена</span><span class="ti">Стоимость</span><span class="ti">Выгода переработки</span></div><ul class="tr0">'+treeNode(n,c[0],0,"")+'</ul></div>'}
+// Сортировка: порядок фиксируется при выборе сортировки и не меняется, когда меняются цены или выбор «Цена из»
+var SORT={k:"m",dir:-1},ORDER=null,ORDER_NOPRICE=false;
+function sortVal(r,k){if(k==="n")return r.n;if(k==="t")return r.t;if(k==="src"){var v=src(r.n);return SRC_OPTS.map(function(o){return o[0]}).indexOf(v)}if(k==="v")return r.d==null?null:(r.d>=0?1:0)*1e15+r.d;return r[k]}
+function cmpRows(a,b){var x=sortVal(a,SORT.k),y=sortVal(b,SORT.k);if(x==null||y==null){if(x==null&&y!=null)return 1;if(y==null&&x!=null)return -1;return a.n.localeCompare(b.n)}var c=typeof x==="string"?x.localeCompare(y):x-y;return c*SORT.dir||a.n.localeCompare(b.n)}
+function sortRows(rows){return rows.slice().sort(cmpRows)}
+function resort(){var all=[];[1,2,3,4].forEach(function(t){names(t).forEach(function(n){var r=cmpOf(n);r.n=n;all.push(r)})});ORDER=sortRows(all).map(function(r){return r.n});ORDER_NOPRICE=!PRICE_AT}
 // Вкладка «Что выгоднее»: цены материалов и сравнение «переработать или продать входы»
 function renderCmp(){
   var box=$("vCmp");if(!box)return;
   var st=PRICE_BUSY?"Загружаю цены…":PRICE_ERR?'<span class="neg">'+PRICE_ERR+'</span>':PRICE_AT?"Цены обновлены в "+PRICE_AT.toLocaleTimeString("ru-RU",{hour:"2-digit",minute:"2-digit"}):"Цены ещё не загружены";
-  var tiers=PTIER?[PTIER]:[1,2,3,4],rows=[],q=PQ.trim().toLowerCase();
-  tiers.forEach(function(t){names(t).forEach(function(n){if(q&&n.toLowerCase().indexOf(q)<0)return;var r=cmpOf(n);r.n=n;rows.push(r)})});
-  rows.sort(function(a,b){return (b.m==null?-1e18:b.m)-(a.m==null?-1e18:a.m)||a.n.localeCompare(b.n)});
+  if(!ORDER||(ORDER_NOPRICE&&PRICE_AT))resort();
+  var rows=[],q=PQ.trim().toLowerCase();
+  ORDER.forEach(function(n){var t=tierOfName(n);if(PTIER&&t!=PTIER)return;if(q&&n.toLowerCase().indexOf(q)<0)return;var r=cmpOf(n);r.n=n;rows.push(r)});
+  var stale=rows.length>1&&sortRows(rows).some(function(r,i){return r.n!==rows[i].n}); // данные изменились — порядок можно обновить по кнопке
   var foc=document.activeElement&&document.activeElement.id==="pq",sp=foc?document.activeElement.selectionStart:0;
   var h='<section class="panel"><div class="pbar2">'+
    '<label class="sel2"><span class="selw"><select id="ptier" aria-label="Показать уровень"><option value="0"'+(!PTIER?" selected":"")+'>Все уровни</option>'+[1,2,3,4].map(function(t){return '<option value="'+t+'"'+(t==PTIER?" selected":"")+'>P'+t+'</option>'}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
@@ -458,9 +470,9 @@ function renderCmp(){
    '<label class="sel2"><span class="help" title="Налог зависит от уровня навыка Accounting: каждый уровень снижает его на 11% от базовых 7,5%. Выбери свой уровень.">Налог с продаж <span class="hq">?</span></span><span class="selw"><select id="ptax">'+[0,1,2,3,4,5].map(function(l){var v=+(7.5*(1-0.11*l)).toFixed(3);return '<option value="'+v+'"'+(Math.abs(v-PTAX)<1e-6?" selected":"")+'>'+(Math.round(v*100+1e-6)/100).toFixed(2).replace(".",",")+"% (Accounting "+l+")</option>"}).join("")+'</select><span class="chev" aria-hidden="true">▾</span></span></label>'+
    '<label class="sel2">Налог брокера, %<input id="pbrk" type="number" min="0" max="100" step="0.01" value="'+PBRK+'" class="ptax"></label>'+
    '</div>'+
-   '<div class="pbar2" style="margin-bottom:0"><span class="note" style="margin:0">'+st+'</span><button type="button" class="btn" id="preload">Обновить цены</button></div>'+
-   '<p class="note">Все цены за 1 шт. В колонке «Цена из» можно выбрать для любого материала свой рынок и тип цены — выбор действует и в таблице, и в деревьях. Себестоимость — сколько стоят на рынке входы, из которых делается 1 шт. Выгода — сколько ISK получишь сверху, если переработаешь входы и продашь продукт, а не продашь сами входы (после налогов). Плюс — выгоднее переработать, минус — выгоднее продать входы. Например, для P4: сделать P4 из P3 или продать все P3. Открой строку, чтобы увидеть дерево производства с ценами каждого материала.</p></section>';
-  h+='<section class="panel"><div class="scroll"><table class="tt cmpt"><colgroup><col class="c-mat"><col class="c-lv"><col class="c-src"><col class="c-pr"><col class="c-pr"><col class="c-pr"><col class="c-mg"><col class="c-vd"></colgroup><thead><tr><th>Материал</th><th class="q">Уровень</th><th>Цена из</th><th class="q">Цена</th><th class="q">Себестоимость</th><th class="q">Выгода</th><th class="q">Наценка</th><th>Что выгоднее</th></tr></thead><tbody>'+
+   '<div class="pbar2" style="margin-bottom:0"><span class="note" style="margin:0">'+st+'</span><button type="button" class="btn" id="preload">Обновить цены</button><button type="button" class="btn" id="preset" title="Сбросить выбор «Цена из» у всех материалов, общий выбор цен, сортировку, фильтры и открытые деревья. Налоги не меняются.">Сбросить всё</button></div>'+
+   '<p class="note">Все цены за 1 шт. В колонке «Цена из» можно выбрать для любого материала свой рынок и тип цены — выбор действует и в таблице, и в деревьях. Себестоимость — сколько стоят на рынке входы, из которых делается 1 шт. Выгода — сколько ISK получишь сверху, если переработаешь входы и продашь продукт, а не продашь сами входы (после налогов). Наценка — та же выгода в процентах от выручки за входы, тоже после налогов. Плюс — выгоднее переработать, минус — выгоднее продать входы. Например, для P4: сделать P4 из P3 или продать все P3. Открой строку, чтобы увидеть дерево производства с ценами каждого материала.</p></section>';
+  h+='<section class="panel">'+(stale?'<div class="stale"><span class="note" style="margin:0">Данные изменились — строки остались на своих местах.</span><button type="button" class="btn" id="presort">Пересортировать</button></div>':'')+'<div class="scroll"><table class="tt cmpt"><colgroup><col class="c-mat"><col class="c-lv"><col class="c-src"><col class="c-pr"><col class="c-pr"><col class="c-pr"><col class="c-mg"><col class="c-vd"></colgroup><thead><tr>'+[["n","Материал",""],["t","Уровень","q"],["src","Цена из",""],["p","Цена","q"],["c","Себестоимость","q"],["d","Выгода","q"],["m","Наценка","q"],["v","Что выгоднее",""]].map(function(c){var on=SORT.k===c[0];return '<th class="'+c[2]+'" aria-sort="'+(on?(SORT.dir>0?"ascending":"descending"):"none")+'"><button type="button" class="sh'+(on?' on':'')+'" data-k="'+c[0]+'">'+c[1]+'<span class="sa" aria-hidden="true">'+(on?(SORT.dir>0?"▲":"▼"):"▲")+'</span></button></th>'}).join("")+'</tr></thead><tbody>'+
    (rows.length?rows.map(function(r){var op=!!TOPEN[r.n];return '<tr class="crow'+(op?' open':'')+'" data-n="'+r.n+'"><td title="'+r.n+'"><span class="mn"><button type="button" class="tgt" aria-expanded="'+op+'" aria-label="Дерево производства: '+r.n+'"><span class="chev">▾</span></button>'+ic(r.n)+'<span>'+r.n+'</span></span></td><td class="q">P'+r.t+'</td><td class="srcc">'+srcSel(r.n)+'</td><td class="q"><b>'+isk(r.p)+'</b></td><td class="q">'+isk(r.c)+'</td><td class="q">'+iskPN(r.d)+'</td><td class="q">'+pct(r.m)+'</td><td>'+verdict(r)+'</td></tr>'+(op?'<tr class="trow"><td colspan="8">'+treeHtml(r.n,r.t)+'</td></tr>':'')}).join(""):'<tr><td colspan="8" class="no">Ничего не найдено</td></tr>')+
    '</tbody></table></div></section>';
   box.innerHTML=h;
@@ -763,9 +775,12 @@ function setTab(t){TAB=t;try{localStorage.setItem("pi-tab",t)}catch(e){}document
 document.querySelectorAll(".tab").forEach(function(b){b.addEventListener("click",function(){setTab(b.dataset.tab)})});
 $("vCmp").addEventListener("click",function(e){
   if(e.target.id==="preload"){loadPrices();return}
+  if(e.target.id==="presort"){resort();renderCmp();return}
+  if(e.target.id==="preset"){MSEL={};saveMsel();TDL={};TCOL={};TOPEN={};PQ="";PTIER=0;PHUB="jita";PMODE="sell";SORT={k:"m",dir:-1};resort();renderCmp();var pb=$("preset");if(pb)pb.focus();return}
+  var sh=e.target.closest(".sh");if(sh){var k=sh.dataset.k;if(SORT.k===k)SORT.dir=-SORT.dir;else{SORT.k=k;SORT.dir=(k==="n"||k==="t"||k==="src")?1:-1}resort();renderCmp();var nb2=document.querySelector('#vCmp .sh[data-k="'+k+'"]');if(nb2)nb2.focus();return}
   if(e.target.closest(".tsel"))return; // выбор цены не сворачивает строку
   var dl=e.target.closest(".tdl");if(dl){treeDepth(dl.parentNode.dataset.root,+dl.dataset.lv);renderCmp();return}
-  var nd=e.target.closest(".tn.hasch");if(nd&&nd.dataset.k&&nd.closest(".tr0")&&nd.dataset.k.indexOf(">")>0){var k=nd.dataset.k;if(TCOL[k])delete TCOL[k];else TCOL[k]=1;renderCmp();var nb=document.querySelector('#vCmp .tn[data-k="'+k.replace(/"/g,'\\"')+'"] .tnt');if(nb&&e.target.closest(".tnt"))nb.focus();return}
+  var nt=e.target.closest(".tree .tnt"),nd=nt&&nt.closest(".tn.hasch");if(nd&&nd.dataset.k&&nd.closest(".tr0")&&nd.dataset.k.indexOf(">")>0){var k=nd.dataset.k;if(TCOL[k])delete TCOL[k];else TCOL[k]=1;renderCmp();var nb=document.querySelector('#vCmp .tn[data-k="'+k.replace(/"/g,'\\"')+'"] .tnt');if(nb&&e.target.closest(".tnt"))nb.focus();return}
   var tr=e.target.closest("tr.crow");if(!tr)return;
   var n=tr.dataset.n;if(TOPEN[n])delete TOPEN[n];else{TOPEN[n]=1;var t0=tierOfName(n);if(TDL[n]==null&&t0>1)treeDepth(n,t0-1)}renderCmp(); // по умолчанию дерево открыто на один уровень вниз
   var b=document.querySelector('#vCmp tr.crow[data-n="'+n.replace(/"/g,'\\"')+'"] .tgt');if(b&&e.target.closest(".tgt"))b.focus();
